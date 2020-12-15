@@ -1,0 +1,48 @@
+//// -- LEVEL 1
+//// -- Tables and References
+
+// Creating tables
+Table user as U {
+  id_user int [pk, increment] 
+  login varchar 
+  password varchar
+  last_name varchar
+  first_name varchar
+  birthday date
+  is_admin boolean
+  is_infected boolean
+}
+
+Table friends {
+  id_user_friend1 int  [ref: > U.id_user]
+  id_user_friend2 int  [ref: > U.id_user]
+}
+
+Table activity {
+  id_activity int [pk, increment]
+  date date
+  start_time time
+  end_time time
+  place place [ref: > place.id_place] 
+  id_user int [ref: > U.id_user]
+ }
+ 
+Table place {
+  id_place int [pk, increment]
+  name varchar
+  adress varchar
+ }
+ 
+Table notification{
+   id_notification int [pk, increment]
+   id_user_dest int [ref: > U.id_user]
+   message varchar
+   type int
+ }
+ 
+Table demandNotification{
+  id_notification int [ref: > notification.id_notification]
+  is_accepted boolean
+  id_user_source int [ref: > U.id_user]
+}
+ 
