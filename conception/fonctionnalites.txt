@@ -1,0 +1,47 @@
+Liste des fonctionnalités de base :
+
+-> visiteur :
+	- S'identifier
+	- Créer un compte
+
+-> utilisateur (=connecté) :
+	- Déconnexion
+	- Modifier compte (login, mdr, nom, prénom, date de naissance)
+	- Déclarer une activité (date, heure début, heure fin, lieu)
+	- Créer un lieu (dénomination, adresse [, coordonnées GPS])
+	- Accéder à l'historique de notifications
+	- Se déclarer positif (-> notification)	
+
+-> administrateur :
+	- Déconnexion
+	- Modifier compte (login, mdr, nom, prénom, date de naissance)
+	- Modifier un utilisateur
+	- Supprimer un utilisateur
+	- Modifier une activité
+	- Supprimer une activité
+	- Modifier un lieu
+	- Supprimer un lieu
+
+-> autre :
+	- Page d'erreur 404 custom
+
+Liste des fonctionnalités bonus du sujet :
+	- Ajouter un ami (-> notification)
+	- Accepter un ami
+	- Refuser un ami
+	- Supprimer un ami (-> notification)
+	- Ajouter une photo de profil utilisateur
+	- Modifier une photo de profil utilisateur
+	- Utiliser un date picker pour renseigner la date de naissance d'un utilisateur
+	- Utiliser un plugin JS pour afficher les activités sous forme de calendrier
+	- Utiliser Ajax pour le rafraîchissement dynamique
+	- Utiliser Openstreetmap pour afficher géographiquement les lieux
+	- Utiliser Openstreetmap pour définir géographiquement les lieux
+
+Liste des fonctionnalités bonus de nous :
+	- Un utilisateur supprime son propre compte
+	- Lorsqu'un utilisateur accepte un ami, l'utilisateur qui a ajouté reçois une notification
+	- Lorsqu'un utilisateur refuse un ami, l'utilisateur qui a ajouté reçois une notification
+	- Lorsqu'un administrateur modifie un compte utilisateur, l'utilisateur est notifié
+	- Lorsqu'un administrateur modifie une activité, l'utilisateur qui a créé l'activité est notifié
+	- Lorsqu'un administrateur modifie un lieu, l'utilisateur qui a créé le lieu est notifié
