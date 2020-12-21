@@ -3,3 +3,4 @@
 /target/
 /CovidMechant.iml
 /src/examples/
+/src/main/java/sql/Constants.java
