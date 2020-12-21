@@ -6,14 +6,14 @@
 
     <!-- Servlet -->
     <servlet>
-        <servlet-name>IndexServlet</servlet-name>
-        <servlet-class>servlets.IndexServlet</servlet-class>
+        <servlet-name>CreerCompteServlet</servlet-name>
+        <servlet-class>servlets.CreerCompteServlet</servlet-class>
     </servlet>
     <!-- Servlet Mapping -->
     <servlet-mapping>
-        <servlet-name>IndexServlet</servlet-name>
+        <servlet-name>CreerCompteServlet</servlet-name>
         <!-- correspond à l'url à charger depuis la racine -->
-        <url-pattern>/index.jsp</url-pattern>
+        <url-pattern>/CreerCompteServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

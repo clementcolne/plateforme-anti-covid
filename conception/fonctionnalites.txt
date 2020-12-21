@@ -6,7 +6,7 @@ Liste des fonctionnalités de base :
 
 -> utilisateur (=connecté) :
 	- Déconnexion
-	- Modifier compte (login, mdr, nom, prénom, date de naissance)
+	- Modifier compte (login, mdp, nom, prénom, date de naissance)
 	- Déclarer une activité (date, heure début, heure fin, lieu)
 	- Créer un lieu (dénomination, adresse [, coordonnées GPS])
 	- Accéder à l'historique de notifications
@@ -14,7 +14,7 @@ Liste des fonctionnalités de base :
 
 -> administrateur :
 	- Déconnexion
-	- Modifier compte (login, mdr, nom, prénom, date de naissance)
+	- Modifier compte (login, mdp, nom, prénom, date de naissance)
 	- Modifier un utilisateur
 	- Supprimer un utilisateur
 	- Modifier une activité

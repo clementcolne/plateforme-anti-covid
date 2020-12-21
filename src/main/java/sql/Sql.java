@@ -1,5 +1,7 @@
 package sql;
 
+import beans.User;
+
 import java.sql.*;
 
 /**
@@ -7,11 +9,10 @@ import java.sql.*;
  */
 public class Sql {
 
-    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://127.0.0.1:8889/jee_database";
+    static final String JDBC_DRIVER = Constants.DRIVER;
+    static final String DB_URL = Constants.PATH;
     static final String USER = "root";
-    // adapter la constante à l'OS utilisé
-    static final String PASS = Constants.password;
+    static final String PASS = Constants.PASSWORD;
 
     public Connection connect() {
         Connection connection = null;
@@ -37,21 +38,26 @@ public class Sql {
         return connection;
     }
 
-    /*public UserBean addUser(String m, String pwd, String fn, String ln) {
+    public void addUser(String nom, String prenom, String mail, String password,String passwordConfirmed, String naissance) {
         Connection con = connect();
 
-        String rqString = "Insert into User VALUES(?, ?, ?, ?);";
+        String rqString = "INSERT INTO User(login, password, last_name, first_name, birthday, is_admin, is_infected) VALUES(?, ?, ?, ?, ?, ?, ?);";
 
-        try{
+
+        try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
-            preparedStmt.setString(1, m);
-            preparedStmt.setString(2, pwd);
-            preparedStmt.setString(3, fn);
-            preparedStmt.setString(4, ln);
+            preparedStmt.setString(1, mail);
+            preparedStmt.setString(2, password);
+            preparedStmt.setString(3, nom);
+            preparedStmt.setString(4, prenom);
+            preparedStmt.setString(5, naissance);
+            // par défaut, un utilisateur n'est ni un admin, ni infecté
+            preparedStmt.setInt(6, 0);
+            preparedStmt.setInt(7, 0);
             preparedStmt.execute();
 
             con.close();
-        } catch (SQLException e){
+        }catch (SQLException e) {
             if(con != null){
                 try {
                     con.close();
@@ -61,29 +67,34 @@ public class Sql {
             e.printStackTrace();
         }
 
-        return getUser(m);
+        //return getUser(mail);
     }
 
-    public UserBean getUser(String m) {
-        UserBean user = null;
+    /**
+     * Retourne l'utilisateur correspondant au login donné en paramètre
+     * @param mail login de l'utilisateur
+     * @return un utilisateur
+     */
+    public User getUser(String mail) {
+        User user = null;
 
-        String rqString = "Select * from user where mail ='" + m + "'";
+        String rqString = "Select * from user where login ='" + mail + "'";
         ResultSet res = doRequest(rqString);
 
         try{
-            user = new UserBean();
+            user = new User();
             while (res.next()){
                 user.setMail(res.getString("mail"));
                 user.setPassword(res.getString("passord"));
-                user.setFirstName(res.getString("first_name"));
-                user.setLastName(res.getString("last_name"));
+                user.setNom(res.getString("first_name"));
+                user.setPrenom(res.getString("last_name"));
             }
         } catch (SQLException e){
             e.printStackTrace();
         }
 
         return user;
-    }*/
+    }
 
     public ResultSet doRequest(String sql_string){
         ResultSet results = null;
