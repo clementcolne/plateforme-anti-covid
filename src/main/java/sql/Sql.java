@@ -14,6 +14,10 @@ public class Sql {
     static final String USER = "root";
     static final String PASS = Constants.PASSWORD;
 
+    /**
+     * Effectue une connexion à la base de données
+     * @return une connexion à la base de données
+     */
     public Connection connect() {
         Connection connection = null;
 
@@ -38,12 +42,28 @@ public class Sql {
         return connection;
     }
 
-    public void addUser(String nom, String prenom, String mail, String password,String passwordConfirmed, String naissance) {
+    /**
+     * Ajoute un utilisateur dans la base de données si celui-ci n'existe pas
+     * @param nom nom de l'utilisateur
+     * @param prenom prénom de l'utilisateur
+     * @param mail mail de l'utilisateur (unique)
+     * @param password mot de passe de l'utilisateur en clair
+     * @param passwordConfirmed mot de passe confirmé de l'utilisateur en clair
+     * @param naissance date de laissance JJ/MM/YYYY de l'utilisateur
+     * @return User l'utilisateur
+     */
+    public User addUser(String nom, String prenom, String mail, String password,String passwordConfirmed, String naissance) {
         Connection con = connect();
 
+        // on vérifie si un utilisateur n'a pas déjà ce mail
+        User u = getUser(mail);
+        if(u != null) {
+            // l'utilisateur existe déjà
+            return null;
+        }
+
         String rqString = "INSERT INTO User(login, password, last_name, first_name, birthday, is_admin, is_infected) VALUES(?, ?, ?, ?, ?, ?, ?);";
-
-
+        
         try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
             preparedStmt.setString(1, mail);
@@ -67,24 +87,30 @@ public class Sql {
             e.printStackTrace();
         }
 
-        //return getUser(mail);
+        u = new User();
+        u.setBirthday(naissance);
+        u.setMail(mail);
+        u.setNom(nom);
+        u.setPrenom(prenom);
+        return u;
     }
 
     /**
-     * Retourne l'utilisateur correspondant au login donné en paramètre
+     * Retourne l'utilisateur correspondant au mail donné en paramètre si il existe
      * @param mail login de l'utilisateur
-     * @return un utilisateur
+     * @return User l'utilisateur correspondant au mail en paramètre si il existe, null sinon
      */
     public User getUser(String mail) {
+
         User user = null;
 
         String rqString = "Select * from user where login ='" + mail + "'";
         ResultSet res = doRequest(rqString);
 
         try{
-            user = new User();
             while (res.next()){
-                user.setMail(res.getString("mail"));
+                user = new User();
+                user.setMail(res.getString("login"));
                 user.setPassword(res.getString("passord"));
                 user.setNom(res.getString("first_name"));
                 user.setPrenom(res.getString("last_name"));
@@ -96,6 +122,42 @@ public class Sql {
         return user;
     }
 
+    /**
+     * Retourne l'utilisateur qui match avec mail/password. Si l'utilisateur est inconnu, l'objet user avec tous les champs à null sont retournée.
+     * Si l'utilisateur existe mais que les mots de passe ne concordent pas, alors seulement le champ mail de l'utilisateur est complété.
+     * @param mail login de l'utilisateur
+     * @param password mot de passe en clair de l'utilisateur
+     * @return User l'utilisateur
+     */
+    public User connectUser(String mail, String password) {
+        User user = null;
+
+        String rqString = "Select * from user where login ='" + mail + "'";
+        ResultSet res = doRequest(rqString);
+        user = new User();
+
+        try{
+            while(res.next()) {
+                if((res.getString("login") != null)){
+                    // l'utilisateur existe, on enregistre son login
+                    user.setMail(res.getString("login"));
+                    if(res.getString("password").equals(password)) {
+                        // l'utilisateur existe et les mots de passe concordent, on enregistre le reste des info de l'utilisateur
+                        user.setPassword(res.getString("password"));
+                        user.setNom(res.getString("first_name"));
+                        user.setPrenom(res.getString("last_name"));
+                    }
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    /**
+     * METHODE COPIE COLLE D'ANCIEN CODE NON TESTEE
+     */
     public ResultSet doRequest(String sql_string){
         ResultSet results = null;
         Connection con = connect();

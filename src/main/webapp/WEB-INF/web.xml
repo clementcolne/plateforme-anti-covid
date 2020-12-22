@@ -16,4 +16,28 @@
         <url-pattern>/CreerCompteServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>ConnexionServlet</servlet-name>
+        <servlet-class>servlets.ConnexionServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ConnexionServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/ConnexionServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>DeconnexionServlet</servlet-name>
+        <servlet-class>servlets.DeconnexionServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>DeconnexionServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/DeconnexionServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>

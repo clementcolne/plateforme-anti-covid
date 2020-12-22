@@ -1,5 +1,6 @@
 package servlets;
 
+import beans.User;
 import sql.Sql;
 
 import javax.servlet.ServletException;
@@ -20,13 +21,21 @@ public class CreerCompteServlet extends HttpServlet {
         String passwordConfirmed = request.getParameter("password-confirmed");
         String naissance = request.getParameter("naissance");
 
-        if(password != passwordConfirmed) {
+        if(!password.equals(passwordConfirmed)) {
             // les mots de passe ne concordent pas
-            response.sendRedirect("/creer-compte.jsp?error=Les mots de passes sont differents");
+            response.sendRedirect("/creer-compte.jsp?error=Les mots de passes sont differents.");
         }else {
             Sql sql = new Sql();
-            sql.addUser(nom, prenom, email, password, passwordConfirmed, naissance);
-            response.sendRedirect("/creer-compte.jsp");
+            User u = sql.addUser(nom, prenom, email, password, passwordConfirmed, naissance);
+            if(u != null) {
+                // ajout de l'utilisateur dans la session
+                request.getSession().setAttribute("user", u);
+
+                response.sendRedirect("/index.jsp");
+            }else{
+                // ce login était déjà utilisé
+                response.sendRedirect("/creer-compte.jsp?error=Ce mail est deja utilise.");
+            }
         }
     }
 

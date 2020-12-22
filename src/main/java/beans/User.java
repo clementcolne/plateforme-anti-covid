@@ -1,7 +1,5 @@
 package beans;
 
-import java.util.Date;
-
 /**
  * @author Clément Colné
  */
@@ -11,7 +9,7 @@ public class User {
     private String password;
     private String nom;
     private String prenom;
-    private Date naissance;
+    private String birthday;
 
     public User() {
     }
@@ -32,8 +30,8 @@ public class User {
         this.password = password;
     }
 
-    public void setNaissance(Date naissance) {
-        this.naissance = naissance;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getNom() {
@@ -50,6 +48,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getBirthday() {
+        return birthday;
     }
 
 }

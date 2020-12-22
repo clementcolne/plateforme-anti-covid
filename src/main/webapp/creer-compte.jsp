@@ -1,3 +1,4 @@
+<%@ page import="beans.User" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,13 +10,10 @@
 	<title>Covid Mechant | Creer un compte</title>
 
 	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
-	
+
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="assets-template/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets-template/css/font-awesome.min.css">
-
-	<link rel="stylesheet" href="bootstrap/css/bootstrap-grid.css">
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="assets-template/css/bootstrap-theme.css" media="screen" >
@@ -35,11 +33,11 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.jsp"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="index.html">Home</a></li>
+					<li><a href="index.jsp">Home</a></li>
 					<li><a href="about.html">About</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -49,11 +47,18 @@
 						</ul>
 					</li>
 					<li><a href="contact.html">Contact</a></li>
-					<li class="active"><a class="btn" href="signin.html">SIGN IN / SIGN UP</a></li>
+					<%
+						User u = (User) request.getSession().getAttribute("user");
+						if(u != null) {
+							out.println("<li><a class='btn' href='/DeconnexionServlet'>DECONNEXION</a></li>");
+						}else{
+							out.println("<li><a class='btn' href='connexion.jsp'>CONNEXION</a></li>");
+						}
+					%>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
-	</div> 
+	</div>
 	<!-- /.navbar -->
 
 	<header id="head" class="secondary"></header>
@@ -62,7 +67,7 @@
 	<div class="container">
 
 		<ol class="breadcrumb">
-			<li><a href="index.html">Accueil</a></li>
+			<li><a href="index.jsp">Accueil</a></li>
 			<li class="active">Creer un compte</li>
 		</ol>
 
@@ -85,10 +90,9 @@
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<h3 class="thin text-center">Creer un nouveau compte</h3>
-							<p class="text-center text-muted">Lorem ipsum dolor sit amet, <a href="signin.html">Login</a> adipisicing elit. Quo nulla quibusdam cum doloremque incidunt nemo sunt a tenetur omnis odio. </p>
 							<hr>
 
-							<form action="/CreerCompteServlect" method="post">
+							<form action="/CreerCompteServlet" method="post">
 								<div class="top-margin">
 									<label>Nom</label>
 									<input type="text" class="form-control" name="nom" required>

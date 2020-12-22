@@ -1,3 +1,4 @@
+<%@ page import="beans.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,20 +9,20 @@
 	
 	<title>Sign in - Progressus Bootstrap template</title>
 
-	<link rel="shortcut icon" href="assets/images/gt_favicon.png">
+	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
 	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets-template/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets-template/css/font-awesome.min.css">
 
 	<!-- Custom styles for our template -->
-	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
-	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="assets-template/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets-template/css/main.css">
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
-    <script src="assets/js/html5shiv.js"></script>
-    <script src="assets/js/respond.min.js"></script>
+    <script src="assets-template/js/html5shiv.js"></script>
+    <script src="assets-template/js/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -32,11 +33,11 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.jsp"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="index.html">Home</a></li>
+					<li><a href="index.jsp">Accueil</a></li>
 					<li><a href="about.html">About</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -46,7 +47,14 @@
 						</ul>
 					</li>
 					<li><a href="contact.html">Contact</a></li>
-					<li class="active"><a class="btn" href="connexion.jsp">SIGN IN / SIGN UP</a></li>
+					<%
+						User u = (User) request.getSession().getAttribute("user");
+						if(u != null) {
+							out.println("<li><a class=\"btn\" href=\"/DeconnexionServlet\">DECONNEXION</a></li>");
+						}else{
+							out.println("<li><a class=\"btn\" href=\"connexion.jsp\">CONNEXION</a></li>");
+						}
+					%>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -59,8 +67,8 @@
 	<div class="container">
 
 		<ol class="breadcrumb">
-			<li><a href="index.html">Home</a></li>
-			<li class="active">User access</li>
+			<li><a href="index.jsp">Accueil</a></li>
+			<li class="active">Connexion</li>
 		</ol>
 
 		<div class="row">
@@ -68,34 +76,40 @@
 			<!-- Article main content -->
 			<article class="col-xs-12 maincontent">
 				<header class="page-header">
-					<h1 class="page-title">Sign in</h1>
+					<h1 class="page-title">Connexion</h1>
 				</header>
 				
 				<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+					<%
+						if(request.getParameter("error") != null) {
+							out.println("<div class='alert alert-danger' role='alert'>");
+							out.println(request.getParameter("error"));
+							out.println("</div>");
+						}
+					%>
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<h3 class="thin text-center">Sign in to your account</h3>
-							<p class="text-center text-muted">Lorem ipsum dolor sit amet, <a href="creer-compte.jsp">Register</a> adipisicing elit. Quo nulla quibusdam cum doloremque incidunt nemo sunt a tenetur omnis odio. </p>
+							<h3 class="thin text-center">Connectez vous a votre compte</h3>
 							<hr>
 							
-							<form>
+							<form action="/ConnexionServlet" method="post">
 								<div class="top-margin">
-									<label>Username/Email <span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
+									<label>Email</label>
+									<input type="email" class="form-control" name="email" required>
 								</div>
 								<div class="top-margin">
-									<label>Password <span class="text-danger">*</span></label>
-									<input type="password" class="form-control">
+									<label>Mot de passe</label>
+									<input type="password" class="form-control" name="password" required>
 								</div>
 
 								<hr>
 
 								<div class="row">
 									<div class="col-lg-8">
-										<b><a href="">Forgot password?</a></b>
+										<b><a href="creer-compte.jsp">Pas encore de compte ? Creer un compte</a></b>
 									</div>
-									<div class="col-lg-4 text-right">
-										<button class="btn btn-action" type="submit">Sign in</button>
+									<div class="offset-lg-8 col-lg-4 text-right">
+										<button class="btn btn-action" type="submit">Connexion</button>
 									</div>
 								</div>
 							</form>
