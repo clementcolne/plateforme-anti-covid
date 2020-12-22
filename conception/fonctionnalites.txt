@@ -1,11 +1,11 @@
 Liste des fonctionnalités de base :
 
 -> visiteur :
-	- S'identifier
-	- Créer un compte
+	- S'identifier FAIT
+	- Créer un compte FAIT
 
 -> utilisateur (=connecté) :
-	- Déconnexion
+	- Déconnexion FAIT
 	- Modifier compte (login, mdp, nom, prénom, date de naissance)
 	- Déclarer une activité (date, heure début, heure fin, lieu)
 	- Créer un lieu (dénomination, adresse [, coordonnées GPS])
@@ -13,7 +13,7 @@ Liste des fonctionnalités de base :
 	- Se déclarer positif (-> notification)	
 
 -> administrateur :
-	- Déconnexion
+	- Déconnexion FAIT
 	- Modifier compte (login, mdp, nom, prénom, date de naissance)
 	- Modifier un utilisateur
 	- Supprimer un utilisateur
