@@ -22,6 +22,12 @@ Liste des fonctionnalités de base :
 	- Modifier un lieu
 	- Supprimer un lieu
 
+-> questions :
+    - que se passe-t-il lorsqu'on supprime un lieu alors qu'une activité contient ce lieu ?
+
+-> problèmes à résoudre :
+    - quand on modifie le compte en mettant son email actuel, on a l'erreur "ce mail est déjà utilisé"
+
 -> autre :
 	- Page d'erreur 404 custom
 
@@ -37,10 +43,9 @@ Liste des fonctionnalités bonus du sujet :
 	- Utiliser Ajax pour le rafraîchissement dynamique
 	- Utiliser Openstreetmap pour afficher géographiquement les lieux
 	- Utiliser Openstreetmap pour définir géographiquement les lieux
-	- Supprimer son compte
 
 Liste des fonctionnalités bonus de nous :
-	- Un utilisateur supprime son propre compte
+	- Un utilisateur supprime son propre compte FAIT
 	- Lorsqu'un utilisateur accepte un ami, l'utilisateur qui a ajouté reçois une notification
 	- Lorsqu'un utilisateur refuse un ami, l'utilisateur qui a ajouté reçois une notification
 	- Lorsqu'un administrateur modifie un compte utilisateur, l'utilisateur est notifié

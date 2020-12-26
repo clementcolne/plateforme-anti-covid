@@ -37,7 +37,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
-					<li><a href="index.html">Home</a></li>
+					<li><a href="index.jsp">Accueil</a></li>
 					<li><a href="about.html">About</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -46,15 +46,11 @@
 							<li><a href="sidebar-right.html">Right Sidebar</a></li>
 						</ul>
 					</li>
-					<li class="active"><a href="contact.html">Contact</a></li>
+					<li class="active"><a href="./">Profil</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
-						if(u == null) {
-							out.println("<li><a class=\"btn\" href=\"DeconnexionServlet\">DECONNEXION</a></li>");
-						}else{
-							out.println("<li><a class=\"btn\" href=\"connexion.jsp\">CONNEXION</a></li>");
-						}
 					%>
+					<li><a class="btn" href="DeconnexionServlet">DECONNEXION</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -127,8 +123,11 @@
 					</div>
 					<br>
 					<div class="row">
-						<div class="col-sm-3 text-right">
+						<div class="col-sm-4 text-right">
 							<input class="btn btn-action" type="submit" value="Modifier mes informations">
+						</div>
+						<div class="col-sm-4 text-right">
+							<a class="btn btn-danger" type="submit" href="/SupprimerCompteServlet">Supprimer mon compte</a>
 						</div>
 					</div>
 					</br>
@@ -145,7 +144,7 @@
 		<div class="footer1">
 			<div class="container">
 				<div class="row">
-					
+
 					<div class="col-md-3 widget">
 						<h3 class="widget-title">Contact</h3>
 						<div class="widget-body">
@@ -153,7 +152,7 @@
 								<a href="mailto:#">some.email@somewhere.com</a><br>
 								<br>
 								234 Hidden Pond Road, Ashland City, TN 37015
-							</p>	
+							</p>
 						</div>
 					</div>
 
@@ -165,7 +164,7 @@
 								<a href=""><i class="fa fa-dribbble fa-2"></i></a>
 								<a href=""><i class="fa fa-github fa-2"></i></a>
 								<a href=""><i class="fa fa-facebook fa-2"></i></a>
-							</p>	
+							</p>
 						</div>
 					</div>
 

@@ -246,4 +246,14 @@ public class Sql {
         return u;
     }
 
+    public void deleteUser(String login) {
+        Connection con = connect();
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute("DELETE FROM user WHERE login = " + login);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 }

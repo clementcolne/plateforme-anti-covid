@@ -10,24 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "ProfilServlet")
-public class ProfilServlet extends HttpServlet {
+@WebServlet(name = "SupprimerCompteServlet")
+public class SupprimerCompteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("/index.jsp");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute("user");
-        if(user == null) {
-            // la page demandée n'est pas accessible par un utilisateur non connecté
-            response.sendRedirect("/index.jsp");
-        }else {
-            String login = user.getMail();
-
-            Sql sql = new Sql();
-            User u = sql.getUser(login);
-
-            response.sendRedirect("/profil.jsp");
-        }
+        Sql sql = new Sql();
+        sql.deleteUser(user.getMail());
+        response.sendRedirect("/index.jsp");
     }
 }

@@ -15,6 +15,8 @@
 	<link rel="stylesheet" href="assets-template/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets-template/css/font-awesome.min.css">
 
+	<link rel="stylesheet" href="assets/notre-css.css">
+
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="assets-template/css/bootstrap-theme.css" media="screen" >
 	<link rel="stylesheet" href="assets-template/css/main.css">
@@ -37,7 +39,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
-					<li class="active"><a href="#">Home</a></li>
+					<li class="active"><a href="#">Accueil</a></li>
 					<li><a href="about.html">About</a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mes notifications <b class="caret"></b></a>
@@ -46,10 +48,10 @@
 							<li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
 						</ul>
 					</li>
-					<li><a href="ProfilServlet">Profil</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
 						if(u != null) {
+							out.println("<li><a href=\"profil.jsp\">Profil</a></li>");
 							out.println("<li><a class=\"btn\" href=\"DeconnexionServlet\">DECONNEXION</a></li>");
 						}else{
 							out.println("<li><a class=\"btn\" href=\"connexion.jsp\">CONNEXION</a></li>");
@@ -61,29 +63,33 @@
 	</div> 
 	<!-- /.navbar -->
 
-	<!-- Header -->
-	<header id="head">
-		<div class="container">
-			<div class="row">
-				<h1 class="lead">AWESOME, CUSTOMIZABLE, FREE</h1>
-				<p class="tagline">PROGRESSUS: free business bootstrap template by <a href="http://www.gettemplate.com/?utm_source=progressus&amp;utm_medium=template&amp;utm_campaign=progressus">GetTemplate</a></p>
-				<p><a class="btn btn-default btn-lg" role="button">MORE INFO</a> <a class="btn btn-action btn-lg" role="button">DOWNLOAD NOW</a></p>
-			</div>
-		</div>
-	</header>
-	<!-- /Header -->
+	<header id="head" class="secondary"></header>
 
 	<!-- Intro -->
 	<div class="container text-center">
 		<br> <br>
-		<h2 class="thin">The best place to tell people why they are here</h2>
+		<h2 class="thin">Covid Mechant</h2>
 		<p class="text-muted">
 			The difference between involvement and commitment is like an eggs-and-ham breakfast:<br> 
 			the chicken was involved; the pig was committed.
 		</p>
+
+		<div class="row">
+			<p>
+				<%
+					if(request.getSession().getAttribute("user") == null) {
+						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"connexion.jsp\">Se connecter</a>");
+						out.println("<a class=\"btn btn-action btn-lg\" role=\"button\" href=\"creer-compte.jsp\">S'incrire</a>");
+					}else{
+						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\">+ activite</a>");
+						out.println("<a class=\"btn btn-danger btn-lg\" role=\"button\" href=\"#\">Se declarer positif</a>");
+					}
+				%>
+			</p>
+		</div>
 	</div>
 	<!-- /Intro-->
-		
+
 	<!-- Highlights - jumbotron -->
 	<div class="jumbotron top-space">
 		<div class="container">
@@ -228,7 +234,7 @@
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="simplenav">
-								<a href="#">Home</a> | 
+								<a href="#">Accueil</a> |
 								<a href="about.html">About</a> |
 								<a href="sidebar-right.html">Sidebar</a> |
 								<a href="contact.html">Contact</a> |

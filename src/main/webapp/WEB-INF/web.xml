@@ -42,14 +42,14 @@
 
     <!-- Servlet -->
     <servlet>
-        <servlet-name>ProfilServlet</servlet-name>
+        <servlet-name>ProfileServlet</servlet-name>
         <servlet-class>servlets.ProfilServlet</servlet-class>
     </servlet>
     <!-- Servlet Mapping -->
     <servlet-mapping>
-        <servlet-name>ProfilServlet</servlet-name>
+        <servlet-name>ProfileServlet</servlet-name>
         <!-- correspond à l'url à charger depuis la racine -->
-        <url-pattern>/ProfilServlet</url-pattern>
+        <url-pattern>/ProfileServlet</url-pattern>
     </servlet-mapping>
 
     <!-- Servlet -->
@@ -62,6 +62,18 @@
         <servlet-name>ModifierProfilServlet</servlet-name>
         <!-- correspond à l'url à charger depuis la racine -->
         <url-pattern>/ModifierProfilServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>SupprimerCompteServlet</servlet-name>
+        <servlet-class>servlets.SupprimerCompteServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>SupprimerCompteServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/SupprimerCompteServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>
