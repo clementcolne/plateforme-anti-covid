@@ -40,13 +40,13 @@
 					<li class="active"><a href="#">Home</a></li>
 					<li><a href="about.html">About</a></li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mes notifications <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="sidebar-left.html">Left Sidebar</a></li>
 							<li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
 						</ul>
 					</li>
-					<li><a href="contact.html">Contact</a></li>
+					<li><a href="ProfilServlet">Profil</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
 						if(u != null) {
@@ -258,8 +258,8 @@
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-	<script src="assets/js/headroom.min.js"></script>
-	<script src="assets/js/jQuery.headroom.min.js"></script>
-	<script src="assets/js/template.js"></script>
+	<script src="assets-template/js/headroom.min.js"></script>
+	<script src="assets-template/js/jQuery.headroom.min.js"></script>
+	<script src="assets-template/js/template.js"></script>
 </body>
 </html>

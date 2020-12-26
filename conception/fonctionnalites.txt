@@ -6,7 +6,7 @@ Liste des fonctionnalités de base :
 
 -> utilisateur (=connecté) :
 	- Déconnexion FAIT
-	- Modifier compte (login, mdp, nom, prénom, date de naissance)
+	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
 	- Déclarer une activité (date, heure début, heure fin, lieu)
 	- Créer un lieu (dénomination, adresse [, coordonnées GPS])
 	- Accéder à l'historique de notifications
@@ -14,7 +14,7 @@ Liste des fonctionnalités de base :
 
 -> administrateur :
 	- Déconnexion FAIT
-	- Modifier compte (login, mdp, nom, prénom, date de naissance)
+	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
 	- Modifier un utilisateur
 	- Supprimer un utilisateur
 	- Modifier une activité
@@ -37,6 +37,7 @@ Liste des fonctionnalités bonus du sujet :
 	- Utiliser Ajax pour le rafraîchissement dynamique
 	- Utiliser Openstreetmap pour afficher géographiquement les lieux
 	- Utiliser Openstreetmap pour définir géographiquement les lieux
+	- Supprimer son compte
 
 Liste des fonctionnalités bonus de nous :
 	- Un utilisateur supprime son propre compte

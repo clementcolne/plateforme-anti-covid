@@ -50,11 +50,10 @@ public class Sql {
      * @param prenom prénom de l'utilisateur
      * @param mail mail de l'utilisateur (unique)
      * @param password mot de passe de l'utilisateur en clair
-     * @param passwordConfirmed mot de passe confirmé de l'utilisateur en clair
      * @param naissance date de laissance JJ/MM/YYYY de l'utilisateur
      * @return User l'utilisateur
      */
-    public User addUser(String nom, String prenom, String mail, String password,String passwordConfirmed, String naissance) {
+    public User addUser(String nom, String prenom, String mail, String password, String naissance) {
         Connection con = connect();
 
         // on vérifie si un utilisateur n'a pas déjà ce mail
@@ -103,19 +102,19 @@ public class Sql {
      * @return User l'utilisateur correspondant au mail en paramètre si il existe, null sinon
      */
     public User getUser(String mail) {
-
         User user = null;
 
-        String rqString = "Select * from user where login ='" + mail + "'";
+        String rqString = "SELECT * FROM user WHERE login ='" + mail + "'";
         ResultSet res = doRequest(rqString);
 
         try{
             while (res.next()){
                 user = new User();
                 user.setMail(res.getString("login"));
-                user.setPassword(res.getString("passord"));
+                user.setPassword(res.getString("password"));
                 user.setNom(res.getString("first_name"));
                 user.setPrenom(res.getString("last_name"));
+                user.setBirthday(res.getString("birthday"));
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -148,6 +147,7 @@ public class Sql {
                         user.setPassword(res.getString("password"));
                         user.setNom(res.getString("first_name"));
                         user.setPrenom(res.getString("last_name"));
+                        user.setBirthday(res.getString("birthday"));
                     }
                 }
             }
@@ -200,6 +200,50 @@ public class Sql {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+
+    public User updateAccount(String nom, String prenom, String mail, String password, String naissance) {
+        Connection con = connect();
+
+        // on vérifie si un utilisateur n'a pas déjà ce mail
+        User u = getUser(mail);
+        if(u != null) {
+            // l'utilisateur existe déjà
+            return null;
+        }
+
+        String rqString = "UPDATE User SET login = ?, password = ?, last_name = ?, first_name = ?, birthday = ?, is_admin = ?, is_infected = ? WHERE login = ?;";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setString(1, mail);
+            preparedStmt.setString(2, generateHashedPassword(password));
+            preparedStmt.setString(3, nom);
+            preparedStmt.setString(4, prenom);
+            preparedStmt.setString(5, naissance);
+            // par défaut, un utilisateur n'est ni un admin, ni infecté
+            preparedStmt.setInt(6, 0);
+            preparedStmt.setInt(7, 0);
+            preparedStmt.setString(8, mail);
+            preparedStmt.executeUpdate();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
+
+        u = new User();
+        u.setBirthday(naissance);
+        u.setMail(mail);
+        u.setNom(nom);
+        u.setPrenom(prenom);
+        return u;
     }
 
 }

@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 
 @WebServlet(name = "CreerCompteServlet")
 public class CreerCompteServlet extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // récupération des champs utilisateur
         String email = request.getParameter("email");
@@ -28,7 +29,7 @@ public class CreerCompteServlet extends HttpServlet {
             response.sendRedirect("/creer-compte.jsp?error=Les mots de passes sont differents.");
         }else {
             Sql sql = new Sql();
-            User u = sql.addUser(nom, prenom, email, password, passwordConfirmed, naissance);
+            User u = sql.addUser(nom, prenom, email, password, naissance);
             if(u != null) {
                 // ajout de l'utilisateur dans la session
                 request.getSession().setAttribute("user", u);

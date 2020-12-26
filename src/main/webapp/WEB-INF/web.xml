@@ -40,4 +40,28 @@
         <url-pattern>/DeconnexionServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>ProfilServlet</servlet-name>
+        <servlet-class>servlets.ProfilServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ProfilServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/ProfilServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>ModifierProfilServlet</servlet-name>
+        <servlet-class>servlets.ModifierProfilServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ModifierProfilServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/ModifierProfilServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>
