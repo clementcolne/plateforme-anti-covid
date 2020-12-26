@@ -32,7 +32,7 @@ Liste des fonctionnalités bonus du sujet :
 	- Supprimer un ami (-> notification)
 	- Ajouter une photo de profil utilisateur
 	- Modifier une photo de profil utilisateur
-	- Utiliser un date picker pour renseigner la date de naissance d'un utilisateur
+	- Utiliser un date picker pour renseigner la date de naissance d'un utilisateur FAIT
 	- Utiliser un plugin JS pour afficher les activités sous forme de calendrier
 	- Utiliser Ajax pour le rafraîchissement dynamique
 	- Utiliser Openstreetmap pour afficher géographiquement les lieux

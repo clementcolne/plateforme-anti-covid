@@ -110,7 +110,7 @@
 
 								<div class="top-margin">
 									<label>Date de naissance</label>
-									<input type="text" class="form-control" name="naissance" required>
+									<input type="date" class="form-control" name="naissance" required>
 								</div>
 
 								<div class="row top-margin">
