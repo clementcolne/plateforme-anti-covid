@@ -10,8 +10,19 @@ public class User {
     private String nom;
     private String prenom;
     private String birthday;
+    private boolean isAdmin;
+    private boolean isInfected;
+    private int id;
 
     public User() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setNom(String nom) {
@@ -54,4 +65,21 @@ public class User {
         return birthday;
     }
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public boolean isInfected() {
+        return isInfected;
+    }
+
+    public void setAdmin(int admin) {
+        if (admin == 1) isAdmin = true;
+        else isAdmin = false;
+    }
+
+    public void setInfected(int infected) {
+        if (infected == 1) isInfected = true;
+        else isInfected = false;
+    }
 }

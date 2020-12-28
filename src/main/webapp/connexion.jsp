@@ -38,15 +38,6 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li><a href="index.jsp">Accueil</a></li>
-					<li><a href="about.html">About</a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="sidebar-left.html">Left Sidebar</a></li>
-							<li><a href="sidebar-right.html">Right Sidebar</a></li>
-						</ul>
-					</li>
-					<li><a href="contact.html">Contact</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
 						if(u != null) {
@@ -95,11 +86,11 @@
 							<form action="/ConnexionServlet" method="post">
 								<div class="top-margin">
 									<label>Email</label>
-									<input type="email" class="form-control" name="email" required>
+									<input type="email" class="form-control" name="email" required value="clement.colne@outlook.com">
 								</div>
 								<div class="top-margin">
 									<label>Mot de passe</label>
-									<input type="password" class="form-control" name="password" required>
+									<input type="password" class="form-control" name="password" required value="password">
 								</div>
 
 								<hr>

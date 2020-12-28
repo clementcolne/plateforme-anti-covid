@@ -76,4 +76,88 @@
         <url-pattern>/SupprimerCompteServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>AdminPannelServlet</servlet-name>
+        <servlet-class>servlets.AdminPannelServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>AdminPannelServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/AdminPannelServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>UpdateUserServlet</servlet-name>
+        <servlet-class>servlets.UpdateUserServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>UpdateUserServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/UpdateUserServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>SupprimerProfilUtilisateurServlet</servlet-name>
+        <servlet-class>servlets.SupprimerProfilUtilisateurServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>SupprimerProfilUtilisateurServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/SupprimerProfilUtilisateurServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>ModifierProfilUtilisateurServlet</servlet-name>
+        <servlet-class>servlets.ModifierProfilUtilisateurServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ModifierProfilUtilisateurServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/ModifierProfilUtilisateurServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>CreerActiviteServlet</servlet-name>
+        <servlet-class>servlets.CreerActiviteServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>CreerActiviteServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/CreerActiviteServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>SupprimerActiviteServlet</servlet-name>
+        <servlet-class>servlets.SupprimerActiviteServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>SupprimerActiviteServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/SupprimerActiviteServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>CreerLieuServlet</servlet-name>
+        <servlet-class>servlets.CreerLieuServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>CreerLieuServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/CreerLieuServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>

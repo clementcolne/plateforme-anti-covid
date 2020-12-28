@@ -38,9 +38,15 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li><a href="index.jsp">Accueil</a></li>
-					<li><a href="about.html">About</a></li>
+					<li><a href="activites.jsp">Activites</a></li>
+					<%
+						User u = (User) request.getSession().getAttribute("user");
+						if(u != null && u.isAdmin()) {
+							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
+						}
+					%>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Notifications <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="sidebar-left.html">Left Sidebar</a></li>
 							<li><a href="sidebar-right.html">Right Sidebar</a></li>
@@ -48,7 +54,7 @@
 					</li>
 					<li class="active"><a href="./">Profil</a></li>
 					<%
-						User u = (User) request.getSession().getAttribute("user");
+						u = (User) request.getSession().getAttribute("user");
 					%>
 					<li><a class="btn" href="DeconnexionServlet">DECONNEXION</a></li>
 				</ul>
@@ -76,7 +82,7 @@
 				</header>
 				
 				<p>
-					Details de votre compte. Vous pouvez mettre à jour ces champs.
+					Details de votre compte. Vous pouvez mettre a jour ces champs.
 				</p>
 				<br>
 				<form action="/ModifierProfilServlet" method="post">
@@ -86,6 +92,13 @@
 								out.println("<div class=\"col-sm-12\">");
 								out.println("<div class='alert alert-warning' role='alert'>");
 								out.println(request.getParameter("error"));
+								out.println("</div>");
+								out.println("</div>");
+							}
+							if(request.getParameter("success") != null) {
+								out.println("<div class=\"col-sm-12\">");
+								out.println("<div class='alert alert-success' role='alert'>");
+								out.println(request.getParameter("success"));
 								out.println("</div>");
 								out.println("</div>");
 							}

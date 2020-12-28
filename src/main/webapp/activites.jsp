@@ -1,4 +1,6 @@
 <%@ page import="beans.User" %>
+<%@ page import="sql.Sql" %>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,8 +8,8 @@
 	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
-	
-	<title>Covid Mechant | Creer un compte</title>
+
+	<title>Contact us - Progressus Bootstrap template</title>
 
 	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
 
@@ -18,6 +20,8 @@
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="assets-template/css/bootstrap-theme.css" media="screen" >
 	<link rel="stylesheet" href="assets-template/css/main.css">
+
+	<link rel="stylesheet" href="assets/notre-css.css">
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -33,19 +37,30 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.jsp"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.html"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li><a href="index.jsp">Accueil</a></li>
+					<li class="active"><a href="activites.jsp">Activites</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
-						if(u != null) {
-							out.println("<li><a class='btn' href='/DeconnexionServlet'>DECONNEXION</a></li>");
-						}else{
-							out.println("<li><a class='btn' href='connexion.jsp'>CONNEXION</a></li>");
+						if(u != null && u.isAdmin()) {
+							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
 						}
 					%>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Notifications <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="sidebar-left.html">Left Sidebar</a></li>
+							<li><a href="sidebar-right.html">Right Sidebar</a></li>
+						</ul>
+					</li>
+					<li><a href="/profil.jsp">Profil</a></li>
+					<%
+						u = (User) request.getSession().getAttribute("user");
+					%>
+					<li><a class="btn" href="DeconnexionServlet">DECONNEXION</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -58,89 +73,69 @@
 	<div class="container">
 
 		<ol class="breadcrumb">
-			<li><a href="index.jsp">Accueil</a></li>
-			<li class="active">Creer un compte</li>
+			<li><a href="index.html">Accueil</a></li>
+			<li class="active">Mes activites</li>
 		</ol>
 
 		<div class="row">
-			
+
 			<!-- Article main content -->
-			<article class="col-xs-12 maincontent">
+			<article class="col-sm-offset-1 col-sm-10 maincontent">
 				<header class="page-header">
-					<h1 class="page-title">Creer un compte</h1>
+					<h1 class="page-title">Liste de mes activites</h1>
 				</header>
-				
-				<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+				<a class="btn btn-default btn-lg" role="button" href="creer-activite.jsp">+ activite</a>
+				<br>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">ID</th>
+							<th scope="col">Titre</th>
+							<th scope="col">Date</th>
+							<th scope="col">Heure debut</th>
+							<th scope="col">Heure fin</th>
+							<th scope="col">Nom du lieu</th>
+							<th scope="col">Suppression</th>
+						</tr>
+					</thead>
+					<tbody>
+
 					<%
-						if(request.getParameter("error") != null) {
-							out.println("<div class='alert alert-danger' role='alert'>");
-							out.println(request.getParameter("error"));
-							out.println("</div>");
+						Sql sql = new Sql();
+						ResultSet resActivity = sql.doRequest("SELECT * FROM activity WHERE id_user = '" + u.getId() + "' ORDER BY id_activity DESC");
+						while(resActivity.next()) {
+							out.println("<tr>" +
+									"<td>" + resActivity.getInt("id_activity") + "</td>" +
+									"<td>" + resActivity.getString("name") + "</td>" +
+									"<td>" + resActivity.getString("date") + "</td>" +
+									"<td>" + resActivity.getString("start_time") + "</td>" +
+									"<td>" + resActivity.getString("end_time") + "</td>");
+							// on récupère le nom du lieu
+							ResultSet resPlace = sql.doRequest("SELECT * FROM place WHERE id_place = '" + resActivity.getString("id_place") + "'");
+							while(resPlace.next()) {
+								out.println("<td>" + resPlace.getString("name") + "</td>" +
+										"<td><form method='Post' action='/SupprimerActiviteServlet'><input type='hidden' name='id_activite' value='" + resActivity.getInt("id_activity") + "'/><button type='submit' class='btn btn-danger'>Supprimer</button></form></td>" +
+										"</tr>");
+							}
 						}
+
 					%>
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<h3 class="thin text-center">Creer un nouveau compte</h3>
-							<hr>
+					</tbody>
+				</table>
+				</br>
 
-							<form action="/CreerCompteServlet" method="post">
-								<div class="top-margin">
-									<label>Nom</label>
-									<input type="text" class="form-control" name="nom" required>
-								</div>
-
-								<div class="top-margin">
-									<label>Prenom</label>
-									<input type="text" class="form-control" name="prenom" required>
-								</div>
-
-								<div class="top-margin">
-									<label>Email</label>
-									<input type="email" class="form-control" name="email" required>
-								</div>
-
-								<div class="top-margin">
-									<label>Date de naissance</label>
-									<input type="date" class="form-control" name="naissance" required>
-								</div>
-
-								<div class="row top-margin">
-									<div class="col-sm-6">
-										<label>Mot de passe</label>
-										<input type="password" class="form-control" name="password" required>
-									</div>
-									<div class="col-sm-6">
-										<label>Confirmer</label>
-										<input type="password" class="form-control" name="password-confirmed" required>
-									</div>
-								</div>
-
-								<hr>
-
-								<div class="row">
-									<div class="col-lg-4 text-right">
-										<button class="btn btn-action" type="submit">Creer mon compte</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-
-				</div>
-				
 			</article>
 			<!-- /Article -->
 
 		</div>
 	</div>	<!-- /container -->
-	
 
-	<footer id="footer" class="top-space">
+	<footer id="footer">
 
 		<div class="footer1">
 			<div class="container">
 				<div class="row">
-					
+
 					<div class="col-md-3 widget">
 						<h3 class="widget-title">Contact</h3>
 						<div class="widget-body">
@@ -148,7 +143,7 @@
 								<a href="mailto:#">some.email@somewhere.com</a><br>
 								<br>
 								234 Hidden Pond Road, Ashland City, TN 37015
-							</p>	
+							</p>
 						</div>
 					</div>
 
@@ -160,7 +155,7 @@
 								<a href=""><i class="fa fa-dribbble fa-2"></i></a>
 								<a href=""><i class="fa fa-github fa-2"></i></a>
 								<a href=""><i class="fa fa-facebook fa-2"></i></a>
-							</p>	
+							</p>
 						</div>
 					</div>
 
@@ -179,15 +174,15 @@
 		<div class="footer2">
 			<div class="container">
 				<div class="row">
-					
+
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="simplenav">
-								<a href="#">Home</a> | 
+								<a href="#">Home</a> |
 								<a href="about.html">About</a> |
 								<a href="sidebar-right.html">Sidebar</a> |
 								<a href="contact.html">Contact</a> |
-								<b><a href="creer-compte.jsp">Sign up</a></b>
+								<b><a href="signup.html">Sign up</a></b>
 							</p>
 						</div>
 					</div>
@@ -195,7 +190,7 @@
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="text-right">
-								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a>
 							</p>
 						</div>
 					</div>
@@ -203,8 +198,8 @@
 				</div> <!-- /row of widgets -->
 			</div>
 		</div>
-	</footer>	
-		
+	</footer>
+
 
 
 
@@ -212,8 +207,14 @@
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-	<script src="bootstrap/js/headroom.min.js"></script>
-	<script src="bootstrap/js/jQuery.headroom.min.js"></script>
-	<script src="bootstrap/js/template.js"></script>
+	<script src="assets-template/js/headroom.min.js"></script>
+	<script src="assets-template/js/jQuery.headroom.min.js"></script>
+	<script src="assets-template/js/template.js"></script>
+
+	<!-- Google Maps -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=&amp;sensor=false&amp;extension=.js"></script>
+	<script src="assets-template/js/google-map.js"></script>
+
+
 </body>
 </html>

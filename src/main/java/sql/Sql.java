@@ -115,6 +115,9 @@ public class Sql {
                 user.setNom(res.getString("first_name"));
                 user.setPrenom(res.getString("last_name"));
                 user.setBirthday(res.getString("birthday"));
+                user.setAdmin(res.getInt("is_admin"));
+                user.setInfected(res.getInt("is_infected"));
+                user.setId(res.getInt("id_user"));
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -131,11 +134,10 @@ public class Sql {
      * @return User l'utilisateur
      */
     public User connectUser(String mail, String password) {
-        User user = null;
 
         String rqString = "Select * from user where login ='" + mail + "'";
         ResultSet res = doRequest(rqString);
-        user = new User();
+        User user = new User();
 
         try{
             while(res.next()) {
@@ -148,6 +150,9 @@ public class Sql {
                         user.setNom(res.getString("first_name"));
                         user.setPrenom(res.getString("last_name"));
                         user.setBirthday(res.getString("birthday"));
+                        user.setAdmin(res.getInt("is_admin"));
+                        user.setInfected(res.getInt("is_infected"));
+                        user.setId(res.getInt("id_user"));
                     }
                 }
             }
@@ -189,7 +194,7 @@ public class Sql {
             // This bytes[] has bytes in decimal format;
             // Convert it to hexadecimal format
             StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++) {
+            for(int i=0 ; i< bytes.length ; i++) {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             //Get complete hashed password in hex format
@@ -202,7 +207,7 @@ public class Sql {
         return generatedPassword;
     }
 
-    public User updateAccount(String nom, String prenom, String mail, String password, String naissance) {
+    public User updateAccount(String nom, String prenom, String mail, String password, String naissance, String oldMail) {
         Connection con = connect();
 
         // on vérifie si un utilisateur n'a pas déjà ce mail
@@ -212,7 +217,7 @@ public class Sql {
             return null;
         }
 
-        String rqString = "UPDATE User SET login = ?, password = ?, last_name = ?, first_name = ?, birthday = ?, is_admin = ?, is_infected = ? WHERE login = ?;";
+        String rqString = "UPDATE User SET login = ?, password = ?, last_name = ?, first_name = ?, birthday = ? WHERE login = ?;";
 
         try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
@@ -222,9 +227,7 @@ public class Sql {
             preparedStmt.setString(4, prenom);
             preparedStmt.setString(5, naissance);
             // par défaut, un utilisateur n'est ni un admin, ni infecté
-            preparedStmt.setInt(6, 0);
-            preparedStmt.setInt(7, 0);
-            preparedStmt.setString(8, mail);
+            preparedStmt.setString(6, oldMail);
             preparedStmt.executeUpdate();
 
             con.close();
@@ -238,12 +241,35 @@ public class Sql {
             e.printStackTrace();
         }
 
-        u = new User();
-        u.setBirthday(naissance);
-        u.setMail(mail);
-        u.setNom(nom);
-        u.setPrenom(prenom);
+        u = getUser(mail);
         return u;
+    }
+
+    public void addActivity(int idUser, String name, String date, String startTime, String endTime, int idPlace) {
+        Connection con = connect();
+
+        String rqString = "INSERT INTO activity(date, start_time, end_time, id_place, id_user, name) VALUES(?, ?, ?, ?, ?, ?);";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setString(1, date);
+            preparedStmt.setString(2, startTime);
+            preparedStmt.setString(3, endTime);
+            preparedStmt.setInt(4, idPlace);
+            preparedStmt.setInt(5, idUser);
+            preparedStmt.setString(6, name);
+            preparedStmt.execute();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
     }
 
     public void deleteUser(String login) {
@@ -251,6 +277,39 @@ public class Sql {
         try {
             Statement stmt = con.createStatement();
             stmt.execute("DELETE FROM user WHERE login = " + login);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void addPlace(String name, String adress) {
+        Connection con = connect();
+
+        String rqString = "INSERT INTO place(name, adress) VALUES(?, ?);";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setString(1, name);
+            preparedStmt.setString(2, adress);
+            preparedStmt.execute();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteActivity(int idActivity) {
+        Connection con = connect();
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute("DELETE FROM activity WHERE id_activity = " + idActivity);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

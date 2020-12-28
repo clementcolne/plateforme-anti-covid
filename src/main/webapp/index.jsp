@@ -40,18 +40,24 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li class="active"><a href="#">Accueil</a></li>
-					<li><a href="about.html">About</a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Mes notifications <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="sidebar-left.html">Left Sidebar</a></li>
-							<li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
-						</ul>
-					</li>
+					<li><a href="activites.jsp">Activites</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
+						if(u != null && u.isAdmin()) {
+							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
+						}
 						if(u != null) {
-							out.println("<li><a href=\"profil.jsp\">Profil</a></li>");
+							out.println("<li class='dropdown'>" +
+									"<a href='#' class='dropdown-toggle' data-toggle='dropdown'>Notifications <b class='caret'></b></a>" +
+									"<ul class='dropdown-menu'>" +
+									"<li><a href='sidebar-left.html'>Left Sidebar</a></li>" +
+									"<li class='active'><a href='sidebar-right.html'>Right Sidebar</a></li>" +
+									"</ul>" +
+									"</li>");
+						}
+						u = (User) request.getSession().getAttribute("user");
+						if(u != null) {
+							out.println("<li><a href='profil.jsp'>Profil</a></li>");
 							out.println("<li><a class=\"btn\" href=\"DeconnexionServlet\">DECONNEXION</a></li>");
 						}else{
 							out.println("<li><a class=\"btn\" href=\"connexion.jsp\">CONNEXION</a></li>");
@@ -72,6 +78,7 @@
 		<p class="text-muted">
 			The difference between involvement and commitment is like an eggs-and-ham breakfast:<br> 
 			the chicken was involved; the pig was committed.
+
 		</p>
 
 		<div class="row">
@@ -81,7 +88,7 @@
 						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"connexion.jsp\">Se connecter</a>");
 						out.println("<a class=\"btn btn-action btn-lg\" role=\"button\" href=\"creer-compte.jsp\">S'incrire</a>");
 					}else{
-						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\">+ activite</a>");
+						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"creer-activite.jsp\">+ activite</a>");
 						out.println("<a class=\"btn btn-danger btn-lg\" role=\"button\" href=\"#\">Se declarer positif</a>");
 					}
 				%>

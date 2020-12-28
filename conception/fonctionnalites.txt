@@ -4,29 +4,27 @@ Liste des fonctionnalités de base :
 	- S'identifier FAIT
 	- Créer un compte FAIT
 
--> utilisateur (=connecté) :
+-> utilisateur (= connecté) :
 	- Déconnexion FAIT
 	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
-	- Déclarer une activité (date, heure début, heure fin, lieu)
-	- Créer un lieu (dénomination, adresse [, coordonnées GPS])
+	- Déclarer une activité (date, heure début, heure fin, lieu) FAIT
+	- Créer un lieu (dénomination, adresse [, coordonnées GPS]) FAIT
 	- Accéder à l'historique de notifications
-	- Se déclarer positif (-> notification)	
+	- Se déclarer positif (-> notification)
 
 -> administrateur :
 	- Déconnexion FAIT
 	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
-	- Modifier un utilisateur
-	- Supprimer un utilisateur
+	- Modifier un utilisateur FAIT
+	- Supprimer un utilisateur FAIT
 	- Modifier une activité
 	- Supprimer une activité
 	- Modifier un lieu
 	- Supprimer un lieu
 
--> questions :
+-> questions/bugs :
     - que se passe-t-il lorsqu'on supprime un lieu alors qu'une activité contient ce lieu ?
-
--> problèmes à résoudre :
-    - quand on modifie le compte en mettant son email actuel, on a l'erreur "ce mail est déjà utilisé"
+    - obligé de changer le mail pour mettre à jour le compte sinon erreur déclenchée
 
 -> autre :
 	- Page d'erreur 404 custom
