@@ -1,6 +1,5 @@
 package servlets;
 
-import beans.User;
 import sql.Sql;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import java.io.IOException;
 public class SupprimerProfilUtilisateurServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String mail = request.getParameter("login");
-        System.out.println(mail);
         Sql sql = new Sql();
         sql.deleteUser("'" + mail + "'");
         response.sendRedirect("/admin-pannel.jsp");

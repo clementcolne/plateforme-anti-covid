@@ -27,7 +27,6 @@ public class ModifierProfilServlet extends HttpServlet {
             // les mots de passe ne concordent pas
             response.sendRedirect("/profil.jsp?error=Les mots de passes sont differents.");
         }else{
-
             Sql sql = new Sql();
             User u = sql.updateAccount(nom, prenom, email, password, naissance, old_mail);
             if(u == null) {
@@ -36,10 +35,6 @@ public class ModifierProfilServlet extends HttpServlet {
             }else {
                 // ajout de l'utilisateur dans la session
                 request.getSession().setAttribute("user", u);
-                System.out.println(u.getMail());
-                System.out.println(u.getNom());
-                System.out.println(u.getPrenom());
-                System.out.println(u.getBirthday());
                 response.sendRedirect("/profil.jsp??success=Le compte a bien ete mis a jour.");
             }
         }

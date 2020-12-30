@@ -17,14 +17,15 @@ Liste des fonctionnalités de base :
 	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
 	- Modifier un utilisateur FAIT
 	- Supprimer un utilisateur FAIT
-	- Modifier une activité
-	- Supprimer une activité
-	- Modifier un lieu
-	- Supprimer un lieu
+	- Modifier une activité FAIT
+	- Supprimer une activité FAIT
+	- Modifier un lieu FAIT
+	- Supprimer un lieu FAIT
 
 -> questions/bugs :
     - que se passe-t-il lorsqu'on supprime un lieu alors qu'une activité contient ce lieu ?
-    - obligé de changer le mail pour mettre à jour le compte sinon erreur déclenchée
+    - voir lors de la suppression d'un compte utilisateur pour supprimer ses activités aussi
+    - heureDebut > heureFin
 
 -> autre :
 	- Page d'erreur 404 custom

@@ -94,6 +94,13 @@
 								out.println("</div>");
 								out.println("</div>");
 							}
+							if(request.getParameter("success") != null) {
+								out.println("<div class=\"col-sm-12\">");
+								out.println("<div class='alert alert-success' role='alert'>");
+								out.println(request.getParameter("success"));
+								out.println("</div>");
+								out.println("</div>");
+							}
 						%>
 						<div class="col-sm-6">
 							<input name='name' class='form-control' type='text' placeholder='Titre' required>

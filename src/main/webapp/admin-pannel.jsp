@@ -80,7 +80,18 @@
 		<div class="row">
 
 			<!-- Article main content -->
-			<article class="col-sm-offset-2 col-sm-8 maincontent">
+			<article class="col-sm-offset-1 col-sm-10 maincontent">
+
+				<%
+					if(request.getParameter("success") != null) {
+						out.println("</br><div class=\"col-sm-12\">");
+						out.println("<div class='alert alert-success' role='alert'>");
+						out.println(request.getParameter("success"));
+						out.println("</div>");
+						out.println("</div>");
+					}
+				%>
+
 				<header class="page-header">
 					<h1 class="page-title">Comptes utilisateurs</h1>
 				</header>
@@ -105,7 +116,7 @@
 
 					<%
 						Sql sql = new Sql();
-						ResultSet results = sql.doRequest("SELECT * FROM user");
+						ResultSet results = sql.doRequest("SELECT * FROM user ORDER BY id_user DESC");
 						while(results.next()) {
 							out.println("<tr>" +
 									"<td>" + results.getInt("id_user") + "</td>" +
@@ -115,6 +126,106 @@
 									"<td>" + results.getString("birthday") + "</td>" +
 									"<td>" + results.getString("is_infected") + "</td>" +
 									"<td><form method='Post' action='/UpdateUserServlet'><input type='hidden' name='login' value='" + results.getString("login") + "'/><button type='submit' class='btn btn-warning'>Modifier</button></form></td>" +
+									"</tr>");
+						}
+
+					%>
+					</tbody>
+				</table>
+				</br>
+
+			</article>
+			<!-- /Article -->
+
+			<!-- Article main content -->
+			<article class="col-sm-offset-1 col-sm-10 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Activites</h1>
+				</header>
+
+				<p>
+					Voici la liste des activites existantes.
+				</p>
+				<br>
+				<table class="table">
+					<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Nom</th>
+						<th scope="col">Date</th>
+						<th scope="col">Debut</th>
+						<th scope="col">Fin</th>
+						<th scope="col">Lieu</th>
+						<th scope="col">Cree par</th>
+						<th scope="col">Modification</th>
+					</tr>
+					</thead>
+					<tbody>
+
+					<%
+						sql = new Sql();
+						// on récupère toutes les activités
+						ResultSet resultActivity = sql.doRequest("SELECT * FROM activity ORDER BY id_activity DESC");
+						ResultSet resultUser;
+						ResultSet resultPlace;
+						while(resultActivity.next()) {
+							// pour chaque activité, on récupère l'utilisateur et le lieu associé
+							resultUser = sql.doRequest("SELECT * FROM user WHERE id_user=" + resultActivity.getInt("id_user"));
+							resultPlace = sql.doRequest("SELECT * FROM place WHERE id_place=" + resultActivity.getInt("id_place"));
+							while(resultUser.next()) {
+								while(resultPlace.next()) {
+									out.println("<tr>" +
+											"<td>" + resultActivity.getInt("id_activity") + "</td>" +
+											"<td>" + resultActivity.getString("name") + "</td>" +
+											"<td>" + resultActivity.getString("date") + "</td>" +
+											"<td>" + resultActivity.getString("start_time") + "</td>" +
+											"<td>" + resultActivity.getString("end_time") + "</td>" +
+											"<td>" + resultPlace.getString("name") + "</td>" +
+											"<td>" + resultUser.getString("login") + "</td>" +
+											"<td><a type='button' class='btn btn-warning' href='modifier-activite.jsp?activityToUpdate=" + resultActivity.getInt("id_activity") + "'>Modifier</a></td>" +
+											"</tr>"
+									);
+								}
+							}
+						}
+
+					%>
+					</tbody>
+				</table>
+				</br>
+
+			</article>
+			<!-- /Article -->
+
+			<!-- Article main content -->
+			<article class="col-sm-offset-1 col-sm-10 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Lieux</h1>
+				</header>
+
+				<p>
+					Voici la liste des lieux existants.
+				</p>
+				<br>
+				<table class="table">
+					<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Nom</th>
+						<th scope="col">Adresse</th>
+					</tr>
+					</thead>
+					<tbody>
+
+					<%
+						sql = new Sql();
+						results = sql.doRequest("SELECT * FROM place ORDER BY id_place DESC");
+						while(results.next()) {
+							out.println("<tr>" +
+									"<td>" + results.getInt("id_place") + "</td>" +
+									"<td>" + results.getString("name") + "</td>" +
+									"<td>" + results.getString("adress") + "</td>" +
+									"<td><a type='button' class='btn btn-warning' href='update-place.jsp?placeToUpdate=" + results.getInt("id_place") + "'>Modifier</a></td>" +
 									"</tr>");
 						}
 

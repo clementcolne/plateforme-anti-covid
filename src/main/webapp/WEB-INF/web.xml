@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/index.jsp</location>
+    </error-page>
+
     <!-- Servlet -->
     <servlet>
         <servlet-name>CreerCompteServlet</servlet-name>
@@ -158,6 +163,42 @@
         <servlet-name>CreerLieuServlet</servlet-name>
         <!-- correspond à l'url à charger depuis la racine -->
         <url-pattern>/CreerLieuServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>UpdatePlaceServlet</servlet-name>
+        <servlet-class>servlets.UpdatePlaceServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>UpdatePlaceServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/UpdatePlaceServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>SupprimerPlaceServlet</servlet-name>
+        <servlet-class>servlets.SupprimerPlaceServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>SupprimerPlaceServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/SupprimerPlaceServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>ModifierActiviteServlet</servlet-name>
+        <servlet-class>servlets.ModifierActiviteServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>ModifierActiviteServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/ModifierActiviteServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>

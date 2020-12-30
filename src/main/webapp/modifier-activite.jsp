@@ -1,18 +1,19 @@
 <%@ page import="beans.User" %>
 <%@ page import="sql.Sql" %>
+<%@ page import="java.sql.SQLException" %>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
-
+	
 	<title>Contact us - Progressus Bootstrap template</title>
 
 	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
-
+	
 	<link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
 	<link rel="stylesheet" href="assets-template/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets-template/css/font-awesome.min.css">
@@ -20,8 +21,6 @@
 	<!-- Custom styles for our template -->
 	<link rel="stylesheet" href="assets-template/css/bootstrap-theme.css" media="screen" >
 	<link rel="stylesheet" href="assets-template/css/main.css">
-
-	<link rel="stylesheet" href="assets/notre-css.css">
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -42,11 +41,11 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li><a href="index.jsp">Accueil</a></li>
-					<li class="active"><a href="activites.jsp">Activites</a></li>
+					<li><a href="activites.jsp">Activites</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
 						if(u != null && u.isAdmin()) {
-							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
+							out.println("<li class='active'><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
 						}
 					%>
 					<li class="dropdown">
@@ -56,15 +55,12 @@
 							<li><a href="sidebar-right.html">Right Sidebar</a></li>
 						</ul>
 					</li>
-					<li><a href="/profil.jsp">Profil</a></li>
-					<%
-						u = (User) request.getSession().getAttribute("user");
-					%>
+					<li><a href="./">Profil</a></li>
 					<li><a class="btn" href="DeconnexionServlet">DECONNEXION</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
-	</div>
+	</div> 
 	<!-- /.navbar -->
 
 	<header id="head" class="secondary"></header>
@@ -74,66 +70,101 @@
 
 		<ol class="breadcrumb">
 			<li><a href="index.html">Accueil</a></li>
-			<li class="active">Mes activites</li>
+			<li class="active">Modifier une activite</li>
 		</ol>
 
 		<div class="row">
 
+			<%
+				if(request.getParameter("error") != null) {
+					out.println("<div class=\"col-sm-12\">");
+					out.println("<div class='alert alert-warning' role='alert'>");
+					out.println(request.getParameter("error"));
+					out.println("</div>");
+					out.println("</div>");
+				}
+			%>
+			
 			<!-- Article main content -->
-			<article class="col-sm-offset-1 col-sm-10 maincontent">
-
-				<%
-					if(request.getParameter("success") != null) {
-						out.println("</br><div class=\"col-sm-12\">");
-						out.println("<div class='alert alert-success' role='alert'>");
-						out.println(request.getParameter("success"));
-						out.println("</div>");
-						out.println("</div>");
-					}
-				%>
-
+			<article class="col-sm-offset-2 col-sm-8 maincontent">
 				<header class="page-header">
-					<h1 class="page-title">Liste de mes activites</h1>
+					<h1 class="page-title">Modifier une activite</h1>
 				</header>
-				<a class="btn btn-default btn-lg" role="button" href="creer-activite.jsp">+ activite</a>
 				<br>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">ID</th>
-							<th scope="col">Titre</th>
-							<th scope="col">Date</th>
-							<th scope="col">Heure debut</th>
-							<th scope="col">Heure fin</th>
-							<th scope="col">Nom du lieu</th>
-							<th scope="col">Suppression</th>
-						</tr>
-					</thead>
-					<tbody>
+				<form action="/ModifierActiviteServlet" method="post">
+					<div class="row">
 
+						<%
+							String idActivity = request.getParameter("activityToUpdate");
+							Sql sql = new Sql();
+							ResultSet result = sql.doRequest("SELECT * FROM activity WHERE id_activity=" + idActivity);
+							int idPlace = 0;
+							int idActivite = 0;
+
+							while(result.next()) {
+								// on récupère l'id du lieu pour le sélectionner dans le menu déroulant
+								idPlace = result.getInt("id_place");
+						%>
+
+						<div class="col-sm-6">
+							<% out.println("<input name='name' class='form-control' type='text' placeholder='Titre' value='" + result.getString("name") + "' required>"); %>
+						</div>
+						<div class="col-sm-6">
+							<% out.println("<input name='date' class='form-control' type='date' placeholder='Date de debut' value=" + result.getString("date") + " required>"); %>
+						</div>
+					</div>
+					<div class="row top-margin">
+						<div class="col-sm-6">
+							<% out.println("<input name='start_time' class='form-control' type='time' placeholder='Heure de debut' value=" + result.getString("start_time") + " required>"); %>
+						</div>
+						<div class="col-sm-6">
+							<%
+								out.println("<input name='end_time' class='form-control' type='time' placeholder='Heure de fin' value=" + result.getString("end_time") + " required>");
+								out.println("<input type='hidden' name='id_activity' value='" + request.getParameter("activityToUpdate") + "'/>");
+							%>
+						</div>
+					</div>
 					<%
-						Sql sql = new Sql();
-						ResultSet resActivity = sql.doRequest("SELECT * FROM activity WHERE id_user = '" + u.getId() + "' ORDER BY id_activity DESC");
-						while(resActivity.next()) {
-							out.println("<tr>" +
-									"<td>" + resActivity.getInt("id_activity") + "</td>" +
-									"<td>" + resActivity.getString("name") + "</td>" +
-									"<td>" + resActivity.getString("date") + "</td>" +
-									"<td>" + resActivity.getString("start_time") + "</td>" +
-									"<td>" + resActivity.getString("end_time") + "</td>");
-							// on récupère le nom du lieu
-							ResultSet resPlace = sql.doRequest("SELECT * FROM place WHERE id_place = '" + resActivity.getString("id_place") + "'");
-							while(resPlace.next()) {
-								out.println("<td>" + resPlace.getString("name") + "</td>" +
-										"<td><form method='Post' action='/SupprimerActiviteServlet'><input type='hidden' name='id_activite' value='" + resActivity.getInt("id_activity") + "'/><button type='submit' class='btn btn-danger'>Supprimer</button></form></td>" +
-										"</tr>");
-							}
-						}
-
+					}
 					%>
-					</tbody>
-				</table>
-				</br>
+					<div class="row top-margin">
+						<div class="col-sm-6">
+							<select class="form-control" id="id_place" name="id_place">
+								<%
+									sql = new Sql();
+									ResultSet res = sql.doRequest("SELECT * FROM place ORDER BY id_place DESC");
+									try{
+										while(res.next()) {
+											if(res.getInt("id_place") == idPlace) {
+												out.println("<option selected value=" + res.getInt("id_place") + ">" + res.getString("name") + "</option>");
+											}else{
+												out.println("<option value=" + res.getInt("id_place") + ">" + res.getString("name") + "</option>");
+											}
+										}
+									} catch (SQLException e){
+										e.printStackTrace();
+									}
+								%>
+							</select>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-4 text-right">
+							<input class="btn btn-action" type="submit" value="Valider la modification de l'activite">
+						</div>
+					</div>
+					</br>
+				</form>
+
+				<form action="/SupprimerActiviteServlet" method="post">
+					<div class="row">
+						<div class="col-sm-4 text-right">
+							<input type="hidden" name="id_activite_admin" value="<%= idActivity %>" />
+							<button class="btn btn-danger" type="submit">Supprimer l'activite</button>
+						</div>
+					</div>
+				</form>
 
 			</article>
 			<!-- /Article -->
@@ -185,11 +216,11 @@
 		<div class="footer2">
 			<div class="container">
 				<div class="row">
-
+					
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="simplenav">
-								<a href="#">Home</a> |
+								<a href="#">Home</a> | 
 								<a href="about.html">About</a> |
 								<a href="sidebar-right.html">Sidebar</a> |
 								<a href="contact.html">Contact</a> |
@@ -201,7 +232,7 @@
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="text-right">
-								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a>
+								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
 							</p>
 						</div>
 					</div>
@@ -209,8 +240,8 @@
 				</div> <!-- /row of widgets -->
 			</div>
 		</div>
-	</footer>
-
+	</footer>	
+		
 
 
 
@@ -221,11 +252,11 @@
 	<script src="assets-template/js/headroom.min.js"></script>
 	<script src="assets-template/js/jQuery.headroom.min.js"></script>
 	<script src="assets-template/js/template.js"></script>
-
+	
 	<!-- Google Maps -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=&amp;sensor=false&amp;extension=.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=&amp;sensor=false&amp;extension=.js"></script> 
 	<script src="assets-template/js/google-map.js"></script>
-
+	
 
 </body>
 </html>

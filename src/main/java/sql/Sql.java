@@ -5,6 +5,7 @@ import beans.User;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.text.Normalizer;
 
 /**
  * @author Clément Colné
@@ -272,6 +273,43 @@ public class Sql {
         }
     }
 
+    public void updateActivity(int idActivity, String name, String date, String startTime, String endTime, int idPlace) {
+        Connection con = connect();
+
+        String rqString = "UPDATE activity SET date = ?, start_time = ?, end_time = ?, id_place = ?, name = ? WHERE id_activity = ?;";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setString(1, date);
+            preparedStmt.setString(2, startTime);
+            preparedStmt.setString(3, endTime);
+            preparedStmt.setInt(4, idPlace);
+            preparedStmt.setString(5, name);
+            preparedStmt.setInt(6, idActivity);
+            preparedStmt.executeUpdate();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteActivity(int idActivity) {
+        Connection con = connect();
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute("DELETE FROM activity WHERE id_activity = " + idActivity);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void deleteUser(String login) {
         Connection con = connect();
         try {
@@ -305,14 +343,64 @@ public class Sql {
         }
     }
 
-    public void deleteActivity(int idActivity) {
+    public void updatePlace(int idPlace, String name, String adress) {
+        Connection con = connect();
+
+        String rqString = "UPDATE place SET name = ?, adress = ? WHERE id_place = ?;";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setString(1, name);
+            preparedStmt.setString(2, adress);
+            preparedStmt.setInt(3, idPlace);
+            preparedStmt.executeUpdate();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
+
+    }
+
+    public void deletePlace(int idPlace) {
         Connection con = connect();
         try {
             Statement stmt = con.createStatement();
-            stmt.execute("DELETE FROM activity WHERE id_activity = " + idActivity);
+            stmt.execute("DELETE FROM place WHERE id_place = " + idPlace);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    /**
+     * Retourne true si le lieu en paramètre est déjà présent dans la table place (à la case près), false sinon
+     * @param place lieu à vérifier si il est déjà présent dans la base de données
+     * @return true si le lieu en paramètre est déjà présent dans la table place (à la case près), false sinon
+     */
+    public boolean containsPlace(String place) {
+        String placeToCompare;
+        // on commence par récupérer tous les lieux existants
+        ResultSet res = this.doRequest("SELECT * FROM place");
+
+        try{
+            while(res.next()) {
+                placeToCompare = res.getString("name");
+                if(place.equalsIgnoreCase(placeToCompare)) {
+                    // il existe 2 lieux identiques à la case près, on retourne true
+                    return true;
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 }
