@@ -22,13 +22,12 @@ Liste des fonctionnalités de base :
 	- Modifier un lieu FAIT
 	- Supprimer un lieu FAIT
 
+-> autre :
+	- Page d'erreur 404 custom
+
 -> questions/bugs :
     - que se passe-t-il lorsqu'on supprime un lieu alors qu'une activité contient ce lieu ?
     - voir lors de la suppression d'un compte utilisateur pour supprimer ses activités aussi
-    - heureDebut > heureFin
-
--> autre :
-	- Page d'erreur 404 custom
 
 Liste des fonctionnalités bonus du sujet :
 	- Ajouter un ami (-> notification)

@@ -23,10 +23,31 @@ public class CreerActiviteServlet extends HttpServlet {
             // il manque un paramètre
             response.sendRedirect("creer-activite.jsp?error=Tous les parametres doivent etre remplis.");
         }else {
-            User user = (User) request.getSession().getAttribute("user");
-            Sql sql = new Sql();
-            sql.addActivity(user.getId(), name, date, startTime, endTime, Integer.parseInt(idPlace));
-            response.sendRedirect("activites.jsp?success=Activite creee avec succes.");
+            // on vérifie que heureDebut <= heureFin
+            // on split les strings
+            String[] startSplitted = startTime.split(":");
+            String[] endSplitted = endTime.split(":");
+            // on compare les heures
+            if(Integer.parseInt(startSplitted[0]) > Integer.parseInt(endSplitted[0])) {
+                // heure début > heure fin, c'est interdit
+                response.sendRedirect("creer-activite.jsp?error=L'heure de debut ne peut pas etre superieure a l'heure de fin.");
+            }else if(Integer.parseInt(startSplitted[0]) == Integer.parseInt(endSplitted[0])) {
+                // les heures sont égales, on compare les minutes
+                if(Integer.parseInt(startSplitted[1]) > Integer.parseInt(endSplitted[1])) {
+                    // les minutes de début > minutes de fin, c'est interdit
+                    response.sendRedirect("creer-activite.jsp?error=L'heure de debut ne peut pas etre superieure a l'heure de fin.");
+                }else{
+                    User user = (User) request.getSession().getAttribute("user");
+                    Sql sql = new Sql();
+                    sql.addActivity(user.getId(), name, date, startTime, endTime, Integer.parseInt(idPlace));
+                    response.sendRedirect("activites.jsp?success=Activite creee avec succes.");
+                }
+            }else {
+                User user = (User) request.getSession().getAttribute("user");
+                Sql sql = new Sql();
+                sql.addActivity(user.getId(), name, date, startTime, endTime, Integer.parseInt(idPlace));
+                response.sendRedirect("activites.jsp?success=Activite creee avec succes.");
+            }
         }
     }
 

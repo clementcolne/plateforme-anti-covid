@@ -74,16 +74,6 @@
 		</ol>
 
 		<div class="row">
-
-			<%
-				if(request.getParameter("error") != null) {
-					out.println("<div class=\"col-sm-12\">");
-					out.println("<div class='alert alert-warning' role='alert'>");
-					out.println(request.getParameter("error"));
-					out.println("</div>");
-					out.println("</div>");
-				}
-			%>
 			
 			<!-- Article main content -->
 			<article class="col-sm-offset-2 col-sm-8 maincontent">
@@ -95,6 +85,14 @@
 					<div class="row">
 
 						<%
+							if(request.getParameter("error") != null) {
+								out.println("<div class=\"col-sm-12\">");
+								out.println("<div class='alert alert-warning' role='alert'>");
+								out.println(request.getParameter("error"));
+								out.println("</div>");
+								out.println("</div>");
+							}
+
 							String idActivity = request.getParameter("activityToUpdate");
 							Sql sql = new Sql();
 							ResultSet result = sql.doRequest("SELECT * FROM activity WHERE id_activity=" + idActivity);

@@ -1,5 +1,6 @@
 package servlets;
 
+import beans.User;
 import sql.Sql;
 
 import javax.servlet.ServletException;
@@ -22,10 +23,32 @@ public class ModifierActiviteServlet extends HttpServlet {
         if(name == null || date == null || startTime == null || endTime == null) {
             // un paramètre est manquant
             response.sendRedirect("update-activity.jsp?activityToUpdate=" + idActivity + "&error=Tous les champs doivent etre remplis.");
+
         }else{
-            Sql sql = new Sql();
-            sql.updateActivity(idActivity, name, date, startTime, endTime, idPlace);
-            response.sendRedirect("admin-pannel.jsp?success=L'actvite a ete modifiee avec succes.");
+            // on vérifie que heureDebut <= heureFin
+            // on split les strings
+            String[] startSplitted = startTime.split(":");
+            String[] endSplitted = endTime.split(":");
+            // on compare les heures
+            if(Integer.parseInt(startSplitted[0]) > Integer.parseInt(endSplitted[0])) {
+                // heure début > heure fin, c'est interdit
+                response.sendRedirect("modifier-activite.jsp?activityToUpdate=" + idActivity + "&error=L'heure de debut ne peut pas etre superieure a l'heure de fin.");
+            }else if(Integer.parseInt(startSplitted[0]) == Integer.parseInt(endSplitted[0])) {
+                // les heures sont égales, on compare les minutes
+                if(Integer.parseInt(startSplitted[1]) > Integer.parseInt(endSplitted[1])) {
+                    // les minutes de début > minutes de fin, c'est interdit
+                    response.sendRedirect("modifier-activite.jsp?activityToUpdate=" + idActivity + "&error=L'heure de debut ne peut pas etre superieure a l'heure de fin.");
+                }else{
+                    User user = (User) request.getSession().getAttribute("user");
+                    Sql sql = new Sql();
+                    sql.addActivity(user.getId(), name, date, startTime, endTime, idPlace);
+                    response.sendRedirect("admin-pannel.jsp?success=Activite creee avec succes.");
+                }
+            }else {
+                Sql sql = new Sql();
+                sql.updateActivity(idActivity, name, date, startTime, endTime, idPlace);
+                response.sendRedirect("admin-pannel.jsp?success=L'actvite a ete modifiee avec succes.");
+            }
         }
     }
 
