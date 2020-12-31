@@ -201,4 +201,16 @@
         <url-pattern>/ModifierActiviteServlet</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet -->
+    <servlet>
+        <servlet-name>DeclarerPositifServlet</servlet-name>
+        <servlet-class>servlets.DeclarerPositifServlet</servlet-class>
+    </servlet>
+    <!-- Servlet Mapping -->
+    <servlet-mapping>
+        <servlet-name>DeclarerPositifServlet</servlet-name>
+        <!-- correspond à l'url à charger depuis la racine -->
+        <url-pattern>/DeclarerPositifServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -1,4 +1,6 @@
 <%@ page import="beans.User" %>
+<%@ page import="sql.Sql" %>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,13 +49,20 @@
 							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
 						}
 						if(u != null) {
-							out.println("<li class='dropdown'>" +
-									"<a href='#' class='dropdown-toggle' data-toggle='dropdown'>Notifications <b class='caret'></b></a>" +
-									"<ul class='dropdown-menu'>" +
-									"<li><a href='sidebar-left.html'>Left Sidebar</a></li>" +
-									"<li class='active'><a href='sidebar-right.html'>Right Sidebar</a></li>" +
-									"</ul>" +
-									"</li>");
+							// on affiche la liste des notifications
+							Sql sql = new Sql();
+							ResultSet notifications = sql.doRequest("SELECT * FROM notification WHERE id_user_dst = " + u.getId() + " ORDER BY id_notification DESC");
+							ResultSet nbNotifications = sql.doRequest("SELECT COUNT(*) AS total FROM notification WHERE id_user_dst = " + u.getId() + " ORDER BY id_notification DESC");
+							while (nbNotifications.next()) {
+								out.println("<li class='dropdown'>" +
+										"<a href='#' class='dropdown-toggle' data-toggle='dropdown'>Notifications (" + nbNotifications.getInt("total") + ")<b class='caret'></b></a>" +
+										"<ul class='dropdown-menu'>");
+								while (notifications.next()) {
+									out.println("<li><a href='#'> " + notifications.getString("message") + "</a></li>");
+								}
+								out.println("</ul>" +
+										"</li>");
+							}
 						}
 						u = (User) request.getSession().getAttribute("user");
 						if(u != null) {
@@ -82,6 +91,24 @@
 		</p>
 
 		<div class="row">
+				<%
+					if(request.getParameter("error") != null) {
+						out.println("<div class='col-sm-offset-2 col-sm-8'>");
+						out.println("<div class='alert alert-warning' role='alert'>");
+						out.println(request.getParameter("error"));
+						out.println("</div>");
+						out.println("</div>");
+					}
+					if(request.getParameter("success") != null) {
+						out.println("<div class='col-sm-offset-2 col-sm-8'>");
+						out.println("<div class='alert alert-success' role='alert'>");
+						out.println(request.getParameter("success"));
+						out.println("</div>");
+						out.println("</div>");
+					}
+				%>
+			</div>
+			<div class="row">
 			<p>
 				<%
 					if(request.getSession().getAttribute("user") == null) {
@@ -89,7 +116,7 @@
 						out.println("<a class=\"btn btn-action btn-lg\" role=\"button\" href=\"creer-compte.jsp\">S'incrire</a>");
 					}else{
 						out.println("<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"creer-activite.jsp\">+ activite</a>");
-						out.println("<a class=\"btn btn-danger btn-lg\" role=\"button\" href=\"#\">Se declarer positif</a>");
+						out.println("<a class='btn btn-danger btn-lg' role='button' href='/DeclarerPositifServlet'>Se declarer positif</a>");
 					}
 				%>
 			</p>
@@ -173,100 +200,7 @@
      		<p class="text-right"><a class="btn btn-primary btn-large">Learn more »</a></p>
   		</div>
 
-</div>	<!-- /container -->
-	
-	<!-- Social links. @TODO: replace by link/instructions in template -->
-	<section id="social">
-		<div class="container">
-			<div class="wrapper clearfix">
-				<!-- AddThis Button BEGIN -->
-				<div class="addthis_toolbox addthis_default_style">
-				<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-				<a class="addthis_button_tweet"></a>
-				<a class="addthis_button_linkedin_counter"></a>
-				<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-				</div>
-				<!-- AddThis Button END -->
-			</div>
-		</div>
-	</section>
-	<!-- /social links -->
-
-
-	<footer id="footer" class="top-space">
-
-		<div class="footer1">
-			<div class="container">
-				<div class="row">
-					
-					<div class="col-md-3 widget">
-						<h3 class="widget-title">Contact</h3>
-						<div class="widget-body">
-							<p>+234 23 9873237<br>
-								<a href="mailto:#">some.email@somewhere.com</a><br>
-								<br>
-								234 Hidden Pond Road, Ashland City, TN 37015
-							</p>	
-						</div>
-					</div>
-
-					<div class="col-md-3 widget">
-						<h3 class="widget-title">Follow me</h3>
-						<div class="widget-body">
-							<p class="follow-me-icons">
-								<a href=""><i class="fa fa-twitter fa-2"></i></a>
-								<a href=""><i class="fa fa-dribbble fa-2"></i></a>
-								<a href=""><i class="fa fa-github fa-2"></i></a>
-								<a href=""><i class="fa fa-facebook fa-2"></i></a>
-							</p>	
-						</div>
-					</div>
-
-					<div class="col-md-6 widget">
-						<h3 class="widget-title">Text widget</h3>
-						<div class="widget-body">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, dolores, quibusdam architecto voluptatem amet fugiat nesciunt placeat provident cumque accusamus itaque voluptate modi quidem dolore optio velit hic iusto vero praesentium repellat commodi ad id expedita cupiditate repellendus possimus unde?</p>
-							<p>Eius consequatur nihil quibusdam! Laborum, rerum, quis, inventore ipsa autem repellat provident assumenda labore soluta minima alias temporibus facere distinctio quas adipisci nam sunt explicabo officia tenetur at ea quos doloribus dolorum voluptate reprehenderit architecto sint libero illo et hic.</p>
-						</div>
-					</div>
-
-				</div> <!-- /row of widgets -->
-			</div>
-		</div>
-
-		<div class="footer2">
-			<div class="container">
-				<div class="row">
-					
-					<div class="col-md-6 widget">
-						<div class="widget-body">
-							<p class="simplenav">
-								<a href="#">Accueil</a> |
-								<a href="about.html">About</a> |
-								<a href="sidebar-right.html">Sidebar</a> |
-								<a href="contact.html">Contact</a> |
-								<b><a href="signup.html">Sign up</a></b>
-							</p>
-						</div>
-					</div>
-
-					<div class="col-md-6 widget">
-						<div class="widget-body">
-							<p class="text-right">
-								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
-							</p>
-						</div>
-					</div>
-
-				</div> <!-- /row of widgets -->
-			</div>
-		</div>
-
-	</footer>	
-		
-
-
-
+	</br>
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

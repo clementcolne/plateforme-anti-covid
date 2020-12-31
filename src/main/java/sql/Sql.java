@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Clément Colné
@@ -246,14 +248,14 @@ public class Sql {
         return u;
     }
 
-    public void addActivity(int idUser, String name, String date, String startTime, String endTime, int idPlace) {
+    public void addActivity(int idUser, String name, Date date, String startTime, String endTime, int idPlace) {
         Connection con = connect();
 
         String rqString = "INSERT INTO activity(date, start_time, end_time, id_place, id_user, name) VALUES(?, ?, ?, ?, ?, ?);";
 
         try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
-            preparedStmt.setString(1, date);
+            preparedStmt.setDate(1, date);
             preparedStmt.setString(2, startTime);
             preparedStmt.setString(3, endTime);
             preparedStmt.setInt(4, idPlace);
@@ -273,14 +275,14 @@ public class Sql {
         }
     }
 
-    public void updateActivity(int idActivity, String name, String date, String startTime, String endTime, int idPlace) {
+    public void updateActivity(int idActivity, String name, Date date, String startTime, String endTime, int idPlace) {
         Connection con = connect();
 
         String rqString = "UPDATE activity SET date = ?, start_time = ?, end_time = ?, id_place = ?, name = ? WHERE id_activity = ?;";
 
         try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
-            preparedStmt.setString(1, date);
+            preparedStmt.setDate(1, date);
             preparedStmt.setString(2, startTime);
             preparedStmt.setString(3, endTime);
             preparedStmt.setInt(4, idPlace);
@@ -310,11 +312,15 @@ public class Sql {
         }
     }
 
-    public void deleteUser(String login) {
+    public void deleteUser(int idUser) {
         Connection con = connect();
         try {
             Statement stmt = con.createStatement();
-            stmt.execute("DELETE FROM user WHERE login = " + login);
+            // on commence par supprimer toutes les activités liées à cet utilisateur
+            stmt.execute("DELETE FROM activity WHERE id_user = " + idUser);
+            // puis on supprime l'utilisateur
+            stmt = con.createStatement();
+            stmt.execute("DELETE FROM user WHERE id_user = " + idUser);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -365,7 +371,6 @@ public class Sql {
             }
             e.printStackTrace();
         }
-
     }
 
     public void deletePlace(int idPlace) {
@@ -373,6 +378,8 @@ public class Sql {
         try {
             Statement stmt = con.createStatement();
             stmt.execute("DELETE FROM place WHERE id_place = " + idPlace);
+            stmt = con.createStatement();
+            stmt.execute("DELETE FROM activity WHERE id_place = " + idPlace);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -401,6 +408,136 @@ public class Sql {
         }
 
         return false;
+    }
+
+    public void declarerPositif(int idUserPositif) {
+        // on déclare déjà l'utilisateur comme positif dans sa table
+        setPositive(idUserPositif);
+
+        // liste pour retenir les utilisateurs ayant déjà reçu une notification
+        List<Integer> notifiedUsers = new ArrayList<>();
+
+        // on récupère la liste des activites de l'utilisateur positif
+        ResultSet activitesUtilisateurPositif = doRequest("SELECT * FROM activity WHERE id_user = " + idUserPositif);
+
+        // on parcours toutes les activités de l'utilisateur positif
+        try{
+            while(activitesUtilisateurPositif.next()) {
+                // on récupère l'id de l'activite de l'utilisateur positif
+                int idLieuUtilisateurPositif = activitesUtilisateurPositif.getInt("id_place");
+                // on récupère la date de l'activité de l'utilisateur positif
+                Date dateActiviteUtilisateurPositif = activitesUtilisateurPositif.getDate("date");
+                // on récupère les heures de début et fin de l'activité de l'utilisateur positif
+                String startTimeUtilisateurPositif = activitesUtilisateurPositif.getString("start_time");
+                String endTimeUtilisateurPositif = activitesUtilisateurPositif.getString("end_time");
+                // on récupère la liste des activites qui ont le même lieu
+                ResultSet listActivites = doRequest("SELECT * FROM activity WHERE id_place = " + idLieuUtilisateurPositif);
+                try{
+                    while(listActivites.next()) {
+                        // on envoie les notification à tous les utilisateurs cas contact
+                        int userToNotify = listActivites.getInt("id_user");
+                        Date dateActivite = listActivites.getDate("date");
+                        String startTimeActivite = listActivites.getString("start_time");
+                        String endTimeActivite = listActivites.getString("end_time");
+                        if(idUserPositif != userToNotify) {
+                            // on n'envoie pas la notification à l'utilisateur positif
+                            if(sameDate(dateActiviteUtilisateurPositif, dateActivite)) {
+                                // on envoie la notification si c'est le même jour
+                                if(samePlageHoraire(startTimeUtilisateurPositif, endTimeUtilisateurPositif, startTimeActivite, endTimeActivite)) {
+                                    // on regarde si les plages horaires correspondent
+                                    if(!notifiedUsers.contains(userToNotify)) {
+                                        // enfin, on vérifie que l'utilisateur n'a pas déjà été notifié pour éviter les doublons
+                                        sendNotification(userToNotify);
+                                        notifiedUsers.add(userToNotify);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public boolean samePlageHoraire(String startTimeUtilisateurPositif, String endTimeUtilisateurPositif, String startTimeActivite, String endTimeActivite) {
+        String[] startTimeUtilisateurPositifExploded = startTimeUtilisateurPositif.split(":");
+        String[] endTimeUtilisateurPositifExploded = endTimeUtilisateurPositif.split(":");
+        String[] startTimeActiviteExploded = startTimeActivite.split(":");
+        String[] endTimeActiviteExploded = endTimeActivite.split(":");
+
+        if(Integer.parseInt(startTimeUtilisateurPositifExploded[0]) > Integer.parseInt(endTimeActiviteExploded[0])) {
+            // l'heure de l'activité l'utilisateur infecté est strictement supérieure
+            return false;
+        }
+
+        if(Integer.parseInt(endTimeUtilisateurPositifExploded[0]) < Integer.parseInt(startTimeActiviteExploded[0])) {
+            // l'heure de l'activité l'utilisateur infecté est strictement inférieure
+            return false;
+        }
+
+        if(Integer.parseInt(endTimeUtilisateurPositifExploded[1]) < Integer.parseInt(startTimeActiviteExploded[1])) {
+            return false;
+        }
+
+        if(Integer.parseInt(startTimeUtilisateurPositifExploded[0]) > Integer.parseInt(endTimeActiviteExploded[0])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean sameDate(Date d1, Date d2) {
+        return d1.equals(d2);
+    }
+
+    public void sendNotification(int idUserDst) {
+        Connection con = connect();
+
+        String rqString = "INSERT INTO notification(id_user_dst, message) VALUES(?, ?);";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setInt(1, idUserDst);
+            preparedStmt.setString(2, "Vous êtes cas contact chakal");
+            preparedStmt.execute();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void setPositive(int idUser) {
+        Connection con = connect();
+
+        String rqString = "UPDATE user SET is_infected = ? WHERE id_user = ?;";
+
+        try {
+            PreparedStatement preparedStmt = con.prepareStatement(rqString);
+            preparedStmt.setInt(1, 1);
+            preparedStmt.setInt(2, idUser);
+            preparedStmt.executeUpdate();
+
+            con.close();
+        }catch (SQLException e) {
+            if(con != null){
+                try {
+                    con.close();
+                } catch (SQLException ignored) {
+                }
+            }
+            e.printStackTrace();
+        }
     }
 
 }

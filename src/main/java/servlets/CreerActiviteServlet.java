@@ -9,17 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
 
 @WebServlet(name = "CreerActiviteServlet")
 public class CreerActiviteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
-        String date = request.getParameter("date");
+        Date date = Date.valueOf(request.getParameter("date"));
         String startTime = request.getParameter("start_time");
         String endTime = request.getParameter("end_time");
         String idPlace = request.getParameter("id_place");
 
-        if(name == "" || date == "" || startTime == "" || endTime == "" || idPlace == "") {
+        if(name == "" || date == null || startTime == "" || endTime == "" || idPlace == "") {
             // il manque un paramètre
             response.sendRedirect("creer-activite.jsp?error=Tous les parametres doivent etre remplis.");
         }else {

@@ -9,8 +9,8 @@ Liste des fonctionnalités de base :
 	- Modifier compte (login, mdp, nom, prénom, date de naissance) FAIT
 	- Déclarer une activité (date, heure début, heure fin, lieu) FAIT
 	- Créer un lieu (dénomination, adresse [, coordonnées GPS]) FAIT
-	- Accéder à l'historique de notifications
-	- Se déclarer positif (-> notification)
+	- Accéder à l'historique de notifications FAIT
+	- Se déclarer positif (-> notification) FAIT
 
 -> administrateur :
 	- Déconnexion FAIT
@@ -26,8 +26,8 @@ Liste des fonctionnalités de base :
 	- Page d'erreur 404 custom
 
 -> questions/bugs :
-    - que se passe-t-il lorsqu'on supprime un lieu alors qu'une activité contient ce lieu ?
-    - voir lors de la suppression d'un compte utilisateur pour supprimer ses activités aussi
+    - vérifier/mettre à jour tout le front
+    - tester des cas de bug (accéder à des pages interdites, valeurs en paramètre de l'URL, ...)
 
 Liste des fonctionnalités bonus du sujet :
 	- Ajouter un ami (-> notification)
