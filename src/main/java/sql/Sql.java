@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,12 +214,16 @@ public class Sql {
 
     public User updateAccount(String nom, String prenom, String mail, String password, String naissance, String oldMail) {
         Connection con = connect();
+        User u;
 
-        // on vérifie si un utilisateur n'a pas déjà ce mail
-        User u = getUser(mail);
-        if(u != null) {
-            // l'utilisateur existe déjà
-            return null;
+        // l'utilisateur veut changer de mail
+        if(!mail.equals(oldMail)) {
+            // on vérifie si un utilisateur n'a pas déjà ce mail
+            u = getUser(mail);
+            if (u != null) {
+                // il existe un utilisateur qui a le mail demandé
+                return null;
+            }
         }
 
         String rqString = "UPDATE User SET login = ?, password = ?, last_name = ?, first_name = ?, birthday = ? WHERE login = ?;";
@@ -245,7 +251,18 @@ public class Sql {
         }
 
         u = getUser(mail);
+
+        // on notifie qu'un admin a modifié le compte
+        sendNotification(u.getId(), getDate() + " : Un administrateur a mis à jour votre profil.");
+
         return u;
+    }
+
+    public String getDate() {
+        // on notifie qu'un admin a modifié le compte
+        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy à HH:mm");
+        Date date = new Date(System.currentTimeMillis());
+        return formatter.format(date);
     }
 
     public void addActivity(int idUser, String name, Date date, String startTime, String endTime, int idPlace) {
@@ -275,7 +292,7 @@ public class Sql {
         }
     }
 
-    public void updateActivity(int idActivity, String name, Date date, String startTime, String endTime, int idPlace) {
+    public void updateActivity(int idActivity, String name, Date date, String startTime, String endTime, int idPlace, int idUser) {
         Connection con = connect();
 
         String rqString = "UPDATE activity SET date = ?, start_time = ?, end_time = ?, id_place = ?, name = ? WHERE id_activity = ?;";
@@ -300,15 +317,21 @@ public class Sql {
             }
             e.printStackTrace();
         }
+        // on notifie l'utilisateur qui a créé l'activité qu'elle a été modifiée par un administrateur
+        sendNotification(idUser, getDate() + " : Un administrateur a mit à jour votre activité \"" + name + "\"");
     }
 
-    public void deleteActivity(int idActivity) {
+    public void deleteActivity(int idActivity, int idUser, String name) {
         Connection con = connect();
         try {
             Statement stmt = con.createStatement();
             stmt.execute("DELETE FROM activity WHERE id_activity = " + idActivity);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+        if(idUser != -1 && name != null) {
+            // on notifie l'utilisateur que son activité a été supprimée par un administrateur
+            sendNotification(idUser, "" + getDate() + " : Un administrateur a supprimé votre activité \"" + name + "\"");
         }
     }
 
@@ -410,56 +433,59 @@ public class Sql {
         return false;
     }
 
-    public void declarerPositif(int idUserPositif) {
-        // on déclare déjà l'utilisateur comme positif dans sa table
-        setPositive(idUserPositif);
+    public void declarerPositif(int idUserPositif, String login) {
+        // on regarde si l'utilisateur n'est pas déjà positif à la covid-19 (pour éviter le spam)
+        if(!getUser(login).isInfected()) {
+            // on déclare déjà l'utilisateur comme positif dans sa table
+            setPositive(idUserPositif);
 
-        // liste pour retenir les utilisateurs ayant déjà reçu une notification
-        List<Integer> notifiedUsers = new ArrayList<>();
+            // liste pour retenir les utilisateurs ayant déjà reçu une notification
+            List<Integer> notifiedUsers = new ArrayList<>();
 
-        // on récupère la liste des activites de l'utilisateur positif
-        ResultSet activitesUtilisateurPositif = doRequest("SELECT * FROM activity WHERE id_user = " + idUserPositif);
+            // on récupère la liste des activites de l'utilisateur positif
+            ResultSet activitesUtilisateurPositif = doRequest("SELECT * FROM activity WHERE Date(date) >= DATE_SUB(Date(NOW()), INTERVAL 10 DAY) AND id_user = " + idUserPositif);
 
-        // on parcours toutes les activités de l'utilisateur positif
-        try{
-            while(activitesUtilisateurPositif.next()) {
-                // on récupère l'id de l'activite de l'utilisateur positif
-                int idLieuUtilisateurPositif = activitesUtilisateurPositif.getInt("id_place");
-                // on récupère la date de l'activité de l'utilisateur positif
-                Date dateActiviteUtilisateurPositif = activitesUtilisateurPositif.getDate("date");
-                // on récupère les heures de début et fin de l'activité de l'utilisateur positif
-                String startTimeUtilisateurPositif = activitesUtilisateurPositif.getString("start_time");
-                String endTimeUtilisateurPositif = activitesUtilisateurPositif.getString("end_time");
-                // on récupère la liste des activites qui ont le même lieu
-                ResultSet listActivites = doRequest("SELECT * FROM activity WHERE id_place = " + idLieuUtilisateurPositif);
-                try{
-                    while(listActivites.next()) {
-                        // on envoie les notification à tous les utilisateurs cas contact
-                        int userToNotify = listActivites.getInt("id_user");
-                        Date dateActivite = listActivites.getDate("date");
-                        String startTimeActivite = listActivites.getString("start_time");
-                        String endTimeActivite = listActivites.getString("end_time");
-                        if(idUserPositif != userToNotify) {
-                            // on n'envoie pas la notification à l'utilisateur positif
-                            if(sameDate(dateActiviteUtilisateurPositif, dateActivite)) {
-                                // on envoie la notification si c'est le même jour
-                                if(samePlageHoraire(startTimeUtilisateurPositif, endTimeUtilisateurPositif, startTimeActivite, endTimeActivite)) {
-                                    // on regarde si les plages horaires correspondent
-                                    if(!notifiedUsers.contains(userToNotify)) {
-                                        // enfin, on vérifie que l'utilisateur n'a pas déjà été notifié pour éviter les doublons
-                                        sendNotification(userToNotify);
-                                        notifiedUsers.add(userToNotify);
+            // on parcours toutes les activités de l'utilisateur positif
+            try {
+                while (activitesUtilisateurPositif.next()) {
+                    // on récupère l'id de l'activite de l'utilisateur positif
+                    int idLieuUtilisateurPositif = activitesUtilisateurPositif.getInt("id_place");
+                    // on récupère la date de l'activité de l'utilisateur positif
+                    Date dateActiviteUtilisateurPositif = activitesUtilisateurPositif.getDate("date");
+                    // on récupère les heures de début et fin de l'activité de l'utilisateur positif
+                    String startTimeUtilisateurPositif = activitesUtilisateurPositif.getString("start_time");
+                    String endTimeUtilisateurPositif = activitesUtilisateurPositif.getString("end_time");
+                    // on récupère la liste des activites qui ont le même lieu et que l'activité date d'il y a moins de 10 jours
+                    ResultSet listActivites = doRequest("SELECT * FROM activity WHERE id_place = " + idLieuUtilisateurPositif);
+                    try {
+                        while (listActivites.next()) {
+                            // on envoie les notification à tous les utilisateurs cas contact
+                            int userToNotify = listActivites.getInt("id_user");
+                            Date dateActivite = listActivites.getDate("date");
+                            String startTimeActivite = listActivites.getString("start_time");
+                            String endTimeActivite = listActivites.getString("end_time");
+                            if (idUserPositif != userToNotify) {
+                                // on n'envoie pas la notification à l'utilisateur positif
+                                if (sameDate(dateActiviteUtilisateurPositif, dateActivite)) {
+                                    // on envoie la notification si c'est le même jour
+                                    if (samePlageHoraire(startTimeUtilisateurPositif, endTimeUtilisateurPositif, startTimeActivite, endTimeActivite)) {
+                                        // on regarde si les plages horaires correspondent
+                                        if (!notifiedUsers.contains(userToNotify)) {
+                                            // enfin, on vérifie que l'utilisateur n'a pas déjà été notifié pour éviter les doublons
+                                            sendNotification(userToNotify, getDate() + " : Vous êtes cas contact à la Covid-19. Faite vous tester et confinez vous.");
+                                            notifiedUsers.add(userToNotify);
+                                        }
                                     }
                                 }
                             }
                         }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e){
-                    e.printStackTrace();
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e){
-            e.printStackTrace();
         }
     }
 
@@ -471,19 +497,25 @@ public class Sql {
 
         if(Integer.parseInt(startTimeUtilisateurPositifExploded[0]) > Integer.parseInt(endTimeActiviteExploded[0])) {
             // l'heure de l'activité l'utilisateur infecté est strictement supérieure
+            System.out.println("l'heure de l'activité l'utilisateur infecté est strictement supérieure");
             return false;
         }
 
         if(Integer.parseInt(endTimeUtilisateurPositifExploded[0]) < Integer.parseInt(startTimeActiviteExploded[0])) {
             // l'heure de l'activité l'utilisateur infecté est strictement inférieure
+            System.out.println("l'heure de l'activité l'utilisateur infecté est strictement inférieure");
             return false;
         }
-
+        System.out.println("Les 2 heures sont égales");
         if(Integer.parseInt(endTimeUtilisateurPositifExploded[1]) < Integer.parseInt(startTimeActiviteExploded[1])) {
+            // la minute de l'utilisateur infecté est strictement inférieure
+            System.out.println("la minute de l'utilisateur infecté est strictement inférieure");
             return false;
         }
 
-        if(Integer.parseInt(startTimeUtilisateurPositifExploded[0]) > Integer.parseInt(endTimeActiviteExploded[0])) {
+        if(Integer.parseInt(startTimeUtilisateurPositifExploded[1]) > Integer.parseInt(endTimeActiviteExploded[1])) {
+            // la minute de l'utilisateur infecté est strictement supérieure
+            System.out.println("la minute de l'utilisateur infecté est strictement supérieure");
             return false;
         }
 
@@ -494,7 +526,7 @@ public class Sql {
         return d1.equals(d2);
     }
 
-    public void sendNotification(int idUserDst) {
+    public void sendNotification(int idUserDst, String message) {
         Connection con = connect();
 
         String rqString = "INSERT INTO notification(id_user_dst, message) VALUES(?, ?);";
@@ -502,7 +534,7 @@ public class Sql {
         try {
             PreparedStatement preparedStmt = con.prepareStatement(rqString);
             preparedStmt.setInt(1, idUserDst);
-            preparedStmt.setString(2, "Vous êtes cas contact chakal");
+            preparedStmt.setString(2, message);
             preparedStmt.execute();
 
             con.close();

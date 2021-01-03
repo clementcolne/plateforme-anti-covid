@@ -22,7 +22,7 @@ public class UpdatePlaceServlet extends HttpServlet {
         }else{
             Sql sql = new Sql();
             sql.updatePlace(idPlace, name, adress);
-            response.sendRedirect("admin-pannel.jsp");
+            response.sendRedirect("admin-pannel.jsp?success=Le lieu a ete modifie avec succes.");
         }
     }
 

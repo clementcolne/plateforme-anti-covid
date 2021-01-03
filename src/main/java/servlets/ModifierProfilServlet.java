@@ -35,7 +35,7 @@ public class ModifierProfilServlet extends HttpServlet {
             }else {
                 // ajout de l'utilisateur dans la session
                 request.getSession().setAttribute("user", u);
-                response.sendRedirect("/profil.jsp??success=Le compte a bien ete mis a jour.");
+                response.sendRedirect("/profil.jsp?success=Le compte a bien ete mis a jour.");
             }
         }
     }

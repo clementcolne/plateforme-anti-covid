@@ -16,11 +16,13 @@ public class SupprimerActiviteServlet extends HttpServlet {
         Sql sql = new Sql();
         if(request.getParameter("id_activite") != null) {
             int idActivite = Integer.parseInt(request.getParameter("id_activite"));
-            sql.deleteActivity(idActivite);
+            sql.deleteActivity(idActivite, -1, null);
             response.sendRedirect("/activites.jsp?success=L'activite a ete supprimee avec succes.");
         }else{
             int idActivite = Integer.parseInt(request.getParameter("id_activite_admin"));
-            sql.deleteActivity(idActivite);
+            int idUser = Integer.parseInt(request.getParameter("created_by"));
+            String name = request.getParameter("name");
+            sql.deleteActivity(idActivite, idUser, name);
             response.sendRedirect("/admin-pannel.jsp?success=L'activite a ete supprimee avec succes.");
         }
     }

@@ -17,7 +17,7 @@ public class DeclarerPositifServlet extends HttpServlet {
         User u = (User) request.getSession().getAttribute("user");
         Sql sql = new Sql();
 
-        sql.declarerPositif(u.getId());
+        sql.declarerPositif(u.getId(), u.getMail());
 
         response.sendRedirect("index.jsp?success=Vous avez bien ete declare positif a la Covid-19. Les personnes ayant ete en contact avec vous dans les 10 derniers jours ont ete averties.");
     }

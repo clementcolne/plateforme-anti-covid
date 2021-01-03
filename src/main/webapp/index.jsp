@@ -9,7 +9,7 @@
 	<meta name="description" content="">
 	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
 	
-	<title>Progressus - Free business bootstrap template by GetTemplate</title>
+	<title>Covid Mechant - Accueil</title>
 
 	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
 	
@@ -37,18 +37,18 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.jsp"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.jsp">Covid Mechant</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
-					<li class="active"><a href="#">Accueil</a></li>
-					<li><a href="activites.jsp">Activites</a></li>
+					<li class="active"><a href="./">Accueil</a></li>
 					<%
 						User u = (User) request.getSession().getAttribute("user");
-						if(u != null && u.isAdmin()) {
-							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
-						}
 						if(u != null) {
+							out.println("<li><a href='activites.jsp'>Activites</a></li>");
+							if(u != null && u.isAdmin()) {
+								out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
+							}
 							// on affiche la liste des notifications
 							Sql sql = new Sql();
 							ResultSet notifications = sql.doRequest("SELECT * FROM notification WHERE id_user_dst = " + u.getId() + " ORDER BY id_notification DESC");
@@ -67,9 +67,9 @@
 						u = (User) request.getSession().getAttribute("user");
 						if(u != null) {
 							out.println("<li><a href='profil.jsp'>Profil</a></li>");
-							out.println("<li><a class=\"btn\" href=\"DeconnexionServlet\">DECONNEXION</a></li>");
+							out.println("<li><a class='btn' href='/DeconnexionServlet'>DECONNEXION</a></li>");
 						}else{
-							out.println("<li><a class=\"btn\" href=\"connexion.jsp\">CONNEXION</a></li>");
+							out.println("<li><a class='btn' href='connexion.jsp'>CONNEXION</a></li>");
 						}
 					%>
 				</ul>
@@ -85,9 +85,7 @@
 		<br> <br>
 		<h2 class="thin">Covid Mechant</h2>
 		<p class="text-muted">
-			The difference between involvement and commitment is like an eggs-and-ham breakfast:<br> 
-			the chicken was involved; the pig was committed.
-
+			Ce service est ouvert a tous, il suffit de vous creer un compte si vous n'en avez pas, ou vous connecter.
 		</p>
 
 		<div class="row">
@@ -128,31 +126,25 @@
 	<div class="jumbotron top-space">
 		<div class="container">
 			
-			<h3 class="text-center thin">Reasons to use this template</h3>
+			<h3 class="text-center thin">Raisons d'utiliser ce service</h3>
 			
 			<div class="row">
-				<div class="col-md-3 col-sm-6 highlight">
-					<div class="h-caption"><h4><i class="fa fa-cogs fa-5"></i>Bootstrap-powered</h4></div>
+				<div class="col-md-4 col-sm-4 highlight">
+					<div class="h-caption"><h4><i class="fa fa-cogs fa-5"></i>Service independant</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque aliquid adipisci aspernatur. Soluta quisquam dignissimos earum quasi voluptate. Amet, dignissimos, tenetur vitae dolor quam iusto assumenda hic reprehenderit?</p>
+						<p>Covid Mechant est un service independant et autonome. Vos donnees ne sont pas envoyees vers differents acteurs. Tout le traitement et le stockage de vos donnees est fait en interne a l'application, aucune autre personne n'y a donc acces.</p>
 					</div>
 				</div>
-				<div class="col-md-3 col-sm-6 highlight">
-					<div class="h-caption"><h4><i class="fa fa-flash fa-5"></i>Fat-free</h4></div>
+				<div class="col-md-4 col-sm-4 highlight">
+					<div class="h-caption"><h4><i class="fa fa-flash fa-5"></i>Rapidite</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, commodi, sequi quis ad fugit omnis cumque a libero error nesciunt molestiae repellat quos perferendis numquam quibusdam rerum repellendus laboriosam reprehenderit! </p>
+						<p>Covid Mechant est un service en direct ultra rapide. Lorsque vous vous declarez positif, toutes les personnes ayant potentiellement ete en contact avec vous dans les 10 derniers jours sont instantanement prevenues.</p>
 					</div>
 				</div>
-				<div class="col-md-3 col-sm-6 highlight">
-					<div class="h-caption"><h4><i class="fa fa-heart fa-5"></i>Creative Commons</h4></div>
+				<div class="col-md-4 col-sm-4 highlight">
+					<div class="h-caption"><h4><i class="fa fa-heart fa-5"></i>Sante</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, vitae, perferendis, perspiciatis nobis voluptate quod illum soluta minima ipsam ratione quia numquam eveniet eum reprehenderit dolorem dicta nesciunt corporis?</p>
-					</div>
-				</div>
-				<div class="col-md-3 col-sm-6 highlight">
-					<div class="h-caption"><h4><i class="fa fa-smile-o fa-5"></i>Author's support</h4></div>
-					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias, excepturi, maiores, dolorem quasi reprehenderit illo accusamus nulla minima repudiandae quas ducimus reiciendis odio sequi atque temporibus facere corporis eos expedita? </p>
+						<p>Covid Mechant est un service qui est bon pour votre sante et celle des autres. Lorsque vous vous declarez positif, chaque personne ayant frequente le meme lieux que vous au meme moment est prevenue.</p>
 					</div>
 				</div>
 			</div> <!-- /row  -->
@@ -164,41 +156,30 @@
 	<!-- container -->
 	<div class="container">
 
-		<h2 class="text-center top-space">Frequently Asked Questions</h2>
+		<h2 class="text-center top-space">Foire aux questions</h2>
 		<br>
 
 		<div class="row">
 			<div class="col-sm-6">
-				<h3>Which code editor would you recommend?</h3>
-				<p>I'd highly recommend you <a href="http://www.sublimetext.com/">Sublime Text</a> - a free to try text editor which I'm using daily. Awesome tool!</p>
+				<h3>Si j'ai frequente un lieux il y a 7 jours et que je me declare positif, les gens que j'ai cotoye seront aussi prevenus ?</h3>
+				<p>Oui, toutes les personnes ayant cotoyé le meme lieu que vous sur au meme moment seront prevenus.</p>
 			</div>
 			<div class="col-sm-6">
-				<h3>Nice header. Where do I find more images like that one?</h3>
-				<p>
-					Well, there are thousands of stock art galleries, but personally, 
-					I prefer to use photos from these sites: <a href="http://unsplash.com">Unsplash.com</a> 
-					and <a href="http://www.flickr.com/creativecommons/by-2.0/tags/">Flickr - Creative Commons</a></p>
+				<h3>Puis-je modifier mon compte apres sa creation ?</h3>
+				<p>Oui, toutes vos donnees personnelles (nom, prenom, mail, mot de passe, date de naissance) sont modifiable et supprimables, et vos activites sont supprimables.</p>
 			</div>
 		</div> <!-- /row -->
 
 		<div class="row">
 			<div class="col-sm-6">
-				<h3>Can I use it to build a site for my client?</h3>
-				<p>
-					Yes, you can. You may use this template for any purpose, just don't forget about the <a href="http://creativecommons.org/licenses/by/3.0/">license</a>, 
-					which says: "You must give appropriate credit", i.e. you must provide the name of the creator and a link to the original template in your work. 
-				</p>
+				<h3>Lorsqu'une personne avec qui j'ai ete en contact dans un lieu se declare positive, suis-je prevenu ?</h3>
+				<p>Oui, dans ce cas, vous recevrez une notification vous prevenant que vous etes cas contact, si l'activite date d'il y a moins de 10 jours.</p>
 			</div>
 			<div class="col-sm-6">
-				<h3>Can you customize this template for me?</h3>
-				<p>Yes, I can. Please drop me a line to sergey-at-pozhilov.com and describe your needs in details. Please note, my services are not cheap.</p>
+				<h3>Ce projet respecte-il tous les critres principaux du sujet ?</h3>
+				<p>Oui absolument. Chaque point non optionnel decrit dans le sujet pdf a ete developpe, teste, et fonctionne a merveille, afin d'assurer un service de qualite et une note maximale.</p>
 			</div>
 		</div> <!-- /row -->
-
-		<div class="jumbotron top-space">
-			<h4>Dicta, nostrum nemo soluta sapiente sit dolor quae voluptas quidem doloribus recusandae facere magni ullam suscipit sunt atque rerum eaque iusto facilis esse nam veniam incidunt officia perspiciatis at voluptatibus. Libero, aliquid illum possimus numquam fuga.</h4>
-     		<p class="text-right"><a class="btn btn-primary btn-large">Learn more »</a></p>
-  		</div>
 
 	</br>
 

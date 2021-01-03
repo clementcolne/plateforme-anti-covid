@@ -1,4 +1,15 @@
 <%@ page import="beans.User" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="sql.Sql" %>
+
+<%
+	User u = (User) request.getSession().getAttribute("user");
+	if(u == null) {
+		// viteur non connecté, page interdite
+		response.sendRedirect("/");
+	}else{
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +18,7 @@
 	<meta name="description" content="">
 	<meta name="author"      content="Sergey Pozhilov (GetTemplate.com)">
 	
-	<title>Contact us - Progressus Bootstrap template</title>
+	<title>Covid Mechant - Profil</title>
 
 	<link rel="shortcut icon" href="assets-template/images/gt_favicon.png">
 	
@@ -33,30 +44,32 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="assets-template/images/logo.png" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.jsp">Covid Mechant</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li><a href="index.jsp">Accueil</a></li>
 					<li><a href="activites.jsp">Activites</a></li>
 					<%
-						User u = (User) request.getSession().getAttribute("user");
 						if(u != null && u.isAdmin()) {
 							out.println("<li><a href=/AdminPannelServlet>Panneau Administrateur</a></li>");
 						}
+						Sql sql = new Sql();
+						ResultSet notifications = sql.doRequest("SELECT * FROM notification WHERE id_user_dst = " + u.getId() + " ORDER BY id_notification DESC");
+						ResultSet nbNotifications = sql.doRequest("SELECT COUNT(*) AS total FROM notification WHERE id_user_dst = " + u.getId() + " ORDER BY id_notification DESC");
+						while (nbNotifications.next()) {
+							out.println("<li class='dropdown'>" +
+									"<a href='#' class='dropdown-toggle' data-toggle='dropdown'>Notifications (" + nbNotifications.getInt("total") + ")<b class='caret'></b></a>" +
+									"<ul class='dropdown-menu'>");
+							while (notifications.next()) {
+								out.println("<li><a href='#'> " + notifications.getString("message") + "</a></li>");
+							}
+							out.println("</ul>" +
+									"</li>");
+						}
 					%>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Notifications <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="sidebar-left.html">Left Sidebar</a></li>
-							<li><a href="sidebar-right.html">Right Sidebar</a></li>
-						</ul>
-					</li>
 					<li class="active"><a href="./">Profil</a></li>
-					<%
-						u = (User) request.getSession().getAttribute("user");
-					%>
-					<li><a class="btn" href="DeconnexionServlet">DECONNEXION</a></li>
+					<li><a class="btn" href="/DeconnexionServlet">DECONNEXION</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
@@ -168,3 +181,7 @@
 
 </body>
 </html>
+
+<%
+	}
+%>

@@ -26,13 +26,8 @@ public class ModifierProfilUtilisateurServlet extends HttpServlet {
             // les mots de passe ne concordent pas
             response.sendRedirect("/update-user.jsp?error=Les mots de passes sont differents.");
         }else{
-
             Sql sql = new Sql();
             User u = sql.updateAccount(nom, prenom, email, password, naissance, oldMail);
-            System.out.println(u.getMail());
-            System.out.println(u.getNom());
-            System.out.println(u.getPrenom());
-            System.out.println(u.getBirthday());
             if(u == null) {
                 // un utilisateur avec ce mail existe déjà
                 response.sendRedirect("/update-user.jsp?error=Ce mail est deja utilise.");
