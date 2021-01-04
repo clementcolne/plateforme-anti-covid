@@ -18,16 +18,11 @@ public class ModifierProfilUtilisateurServlet extends HttpServlet {
         String prenom = request.getParameter("prenom");
         String nom = request.getParameter("nom");
         String naissance = request.getParameter("naissance");
-        String password = request.getParameter("password");
-        String passwordConfirmed = request.getParameter("password-confirmed");
-        if(email.equals("") || prenom.equals("") || nom.equals("") || naissance.equals("") || password.equals("")) {
+        if(email.equals("") || prenom.equals("") || nom.equals("") || naissance.equals("")) {
             response.sendRedirect("/update-user.jsp?error=Aucun champ de modification de compte ne peut etre vide.");
-        }else if(!password.equals(passwordConfirmed)) {
-            // les mots de passe ne concordent pas
-            response.sendRedirect("/update-user.jsp?error=Les mots de passes sont differents.");
         }else{
             Sql sql = new Sql();
-            User u = sql.updateAccount(nom, prenom, email, password, naissance, oldMail);
+            User u = sql.updateAccount(nom, prenom, email, null, naissance, oldMail);
             if(u == null) {
                 // un utilisateur avec ce mail existe déjà
                 response.sendRedirect("/update-user.jsp?error=Ce mail est deja utilise.");

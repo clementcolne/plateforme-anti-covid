@@ -125,7 +125,7 @@
 										"<input name='name' class='form-control' type='text' placeholder='Nom du lieu' value='" + result.getString("name") + "' required>" +
 										"</div>" +
 										"<div class='col-sm-6'>" +
-										"<input name='adress' class='form-control' type='date' placeholder='Adresse du lieu' value='" + result.getString("adress") + "'required>" +
+										"<input name='adress' class='form-control' type='text' placeholder='Adresse du lieu' value='" + result.getString("adress") + "'required>" +
 										"<input type='hidden' name='id_place' value='" + result.getInt("id_place") + "'/>" +
 										"</div>");
 							}

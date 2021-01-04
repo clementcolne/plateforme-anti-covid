@@ -154,14 +154,6 @@
 							%>
 						</div>
 					</div>
-					<div class="row top-margin">
-						<div class="col-sm-6">
-							<input name='password' class='form-control' type='password' placeholder='Nouveau mot de passe'>
-						</div>
-						<div class="col-sm-6">
-							<input name='password-confirmed' class='form-control' type='password' placeholder='Confirmation du nouveau mot de passe'>
-						</div>
-					</div>
 					<br>
 					<div class="row">
 						<div class="col-sm-4 text-right">
@@ -174,7 +166,7 @@
 				<form action="/SupprimerProfilUtilisateurServlet" method="post">
 					<div class="row">
 						<div class="col-sm-4 text-right">
-							<input type="hidden" name="login" value="<%=user.getMail()%>" />
+							<input type="hidden" name="id_user" value="<%=user.getId()%>" />
 							<button class="btn btn-danger" type="submit">Supprimer le compte</button>
 						</div>
 					</div>

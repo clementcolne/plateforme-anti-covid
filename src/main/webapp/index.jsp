@@ -2,7 +2,7 @@
 <%@ page import="sql.Sql" %>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport"    content="width=device-width, initial-scale=1.0">

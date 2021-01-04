@@ -8,25 +8,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @WebServlet(name = "ModifierProfilUtilisateurServlet")
 public class SupprimerProfilUtilisateurServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String mail = request.getParameter("login");
+        int idUser = Integer.parseInt(request.getParameter("id_user"));
         Sql sql = new Sql();
-        ResultSet res = sql.doRequest("DELECT * FROM user WHERE login = " + mail);
-        try{
-            while(res.next()) {
-               int idUser = res.getInt("id_user");
-               sql.deleteUser(idUser);
-            }
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        response.sendRedirect("/admin-pannel.jsp");
+        sql.deleteUser(idUser);
+        response.sendRedirect("/admin-pannel.jsp?success=L'utilisateur a bien ete supprime.");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
