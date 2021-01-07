@@ -37,5 +37,4 @@ Liste des fonctionnalités bonus de nous :
 	- Lorsqu'un administrateur supprime une activité, l'utilisateur qui a créé l'activité est notifié FAIT
 	- Lorsqu'un utilisateur supprime son compte, toutes ses activités et notifications sont supprimées FAIT
 	- Lorsqu'un lieu est supprimé, toutes les activités contenant ce lieu sont supprimées FAIT
-	- Un utilisateur peut supprimer son compte FAIT
 	- Un utilisateur peut supprimer une activité FAIT

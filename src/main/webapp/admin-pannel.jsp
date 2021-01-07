@@ -130,13 +130,19 @@
 					<%
 						ResultSet results = sql.doRequest("SELECT * FROM user ORDER BY id_user DESC");
 						while(results.next()) {
+							String isInfected;
+							if(results.getInt("is_infected") == 1) {
+								isInfected = "Oui";
+							}else{
+								isInfected = "Non";
+							}
 							out.println("<tr>" +
 									"<td>" + results.getInt("id_user") + "</td>" +
 									"<td>" + results.getString("last_name") + "</td>" +
 									"<td>" + results.getString("first_name") + "</td>" +
 									"<td>" + results.getString("login") + "</td>" +
 									"<td>" + results.getString("birthday") + "</td>" +
-									"<td>" + results.getString("is_infected") + "</td>" +
+									"<td>" + isInfected + "</td>" +
 									"<td><form method='Post' action='/UpdateUserServlet'><input type='hidden' name='login' value='" + results.getString("login") + "'/><button type='submit' class='btn btn-warning'>Modifier</button></form></td>" +
 									"</tr>");
 						}

@@ -86,11 +86,11 @@
 							<form action="/ConnexionServlet" method="post">
 								<div class="top-margin">
 									<label>Email</label>
-									<input type="email" class="form-control" name="email" required value="clement.colne@outlook.com">
+									<input type="email" class="form-control" name="email" required>
 								</div>
 								<div class="top-margin">
 									<label>Mot de passe</label>
-									<input type="password" class="form-control" name="password" required value="password">
+									<input type="password" class="form-control" name="password" required>
 								</div>
 
 								<hr>
