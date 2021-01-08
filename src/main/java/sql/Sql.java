@@ -248,6 +248,9 @@ public class Sql {
                     }
                 }
                 e.printStackTrace();
+                u = getUser(mail);
+                // on notifie qu'un admin a modifié le compte
+                sendNotification(u.getId(), getDate() + " : Un administrateur a mis à jour votre profil.");
             }
         }else{
             // un utilisateur modifie son propre compte
@@ -276,9 +279,6 @@ public class Sql {
         }
 
         u = getUser(mail);
-
-        // on notifie qu'un admin a modifié le compte
-        sendNotification(u.getId(), getDate() + " : Un administrateur a mis à jour votre profil.");
 
         return u;
     }
