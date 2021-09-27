@@ -14,6 +14,9 @@ Les utilisateurs du site peuvent rejoindre des activités auquelles ils ont part
 - [Bootstrap](https://getbootstrap.com)
 - SQL (MySql)
 
+## Captures
+![](https://github.com/clementcolne/plateforme-anti-covid/blob/master/anticovid.png)
+
 ## Fonctionnalités
 - Créer un compte
 - S'identifier
