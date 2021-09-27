@@ -1,4 +1,4 @@
-# Covid Méchant
+# Plateforme Anti Covid
 Ce projet est un site développé dans le cadre du projet de fin de semestre de Master 1 Informatique.
 
 ## A Propos
